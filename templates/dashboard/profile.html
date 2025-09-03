@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Profile Settings - Dashboard - CUR8tr{% endblock %}
+
+{% block content %}
+<form id="profile-form" method="POST" enctype="multipart/form-data">
+    {{ form.csrf_token }}
+
+  <section class="profile-figma">
+    <!-- Header -->
+    <div class="profile-figma-header">
+      <div class="profile-figma-title">
+        PROFILE SETTINGS
+      </div>
+    </div>
+    <!-- Main Row: Inputs (left) & Image Upload (right) -->
+    <div class="profile-figma-main">
+      <!-- Left: Inputs Column -->
+      <div class="profile-figma-form">
+        <!-- Profile Name -->
+        <div class="profile-figma-row">
+          <img src="{{ url_for('static', filename='svg/username.svg') }}" alt="Profile" class="profile-figma-icon">
+          {{ form.name(class="profile-figma-input", placeholder="Profile Name") }}
+        </div>
+        <!-- Bio -->
+        <div class="profile-figma-row profile-figma-bio-row">
+          {{ form.bio(class="profile-figma-input", placeholder="Bio") }}
+        </div>
+        <!-- Country & City -->
+        <div class="profile-figma-country-city-row">
+          <div class="profile-figma-country-city-field">
+            <img src="{{ url_for('static', filename='svg/globe-earth.svg') }}" alt="Country" class="profile-figma-icon">
+            {{ form.country(class="profile-figma-input", placeholder="Country") }}
+            <img src="{{ url_for('static', filename='svg/caret-down.svg') }}" alt="Select" class="profile-figma-caret">
+          </div>
+          <div class="profile-figma-country-city-field">
+            <img src="{{ url_for('static', filename='svg/globe-earth.svg') }}" alt="City" class="profile-figma-icon">
+            {{ form.city(class="profile-figma-input", placeholder="City") }}
+            <img src="{{ url_for('static', filename='svg/caret-down.svg') }}" alt="Select" class="profile-figma-caret">
+          </div>
+        </div>
+        <!-- Instagram Handle -->
+        <div class="profile-figma-row">
+          <img src="{{ url_for('static', filename='svg/instagram.svg') }}" alt="Instagram" class="profile-figma-icon">
+          {{ form.instagram_handle(class="profile-figma-input", placeholder="Instagram Handle") }}
+        </div>
+        <!-- TikTok Handle -->
+        <div class="profile-figma-row">
+          <img src="{{ url_for('static', filename='svg/tiktok.svg') }}" alt="TikTok" class="profile-figma-icon">
+          {{ form.tiktok_handle(class="profile-figma-input", placeholder="TikTok Handle") }}
+        </div>
+        <!-- Make Profile Public -->
+        <div class="profile-figma-public-row">
+          <label class="profile-figma-checkbox">
+            {{ form.is_public(class="profile-figma-checkbox-input") }}
+            <span class="profile-figma-checkmark"></span>
+          </label>
+          <span class="profile-figma-public-label">Make Profile Public</span>
+        </div>
+      </div>
+      <!-- Right: Image Upload Box -->
+      <div class="profile-figma-upload-col">
+        <div class="profile-figma-upload-row">
+          <img src="{{ url_for('static', filename='svg/image-upload.svg') }}" alt="Upload" class="profile-figma-upload-icon">
+          <span class="profile-figma-upload-label">Upload Profile Image</span>
+          <div class="profile-figma-upload-dropzone" id="dropzone">
+            {{ form.profile_image(style="display: none;", id="file-input") }}
+            <span id="drop-content">Drag & drop or click to upload</span>
+            <div id="preview-area" style="display: none;">
+              <img id="preview-image" class="profile-figma-upload-preview">
+              <span id="preview-name" class="profile-figma-upload-preview-name"></span>
+              <button type="button" id="remove-image" class="profile-figma-upload-remove">Remove</button>
+            </div>
+          </div>
+          {% if profile and profile.profile_image %}
+            <img src="{{ profile.profile_image }}" alt="Current profile image" class="profile-figma-current-image">
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <!-- Action Buttons below upload box -->
+    <div class="profile-figma-actions">
+      <a href="{{ url_for('dashboard') }}" class="profile-figma-back-btn">
+        <img src="{{ url_for('static', filename='svg/arrow-left.svg') }}" alt="Back" class="profile-figma-action-icon">
+        <span class="profile-figma-btn-text">Go Back</span>
+      </a>
+      <button type="submit" class="profile-figma-save-btn">
+        <img src="{{ url_for('static', filename='svg/floppy-disk.svg') }}" alt="Save" class="profile-figma-action-icon">
+        <span class="profile-figma-btn-text">Save Profile</span>
+      </button>
+    </div>
+  </section>
+</form>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('file-input');
+    const dropContent = document.getElementById('drop-content');
+    const previewArea = document.getElementById('preview-area');
+    const previewImage = document.getElementById('preview-image');
+    const previewName = document.getElementById('preview-name');
+    const removeButton = document.getElementById('remove-image');
+    dropzone.addEventListener('click', function() { fileInput.click(); });
+    dropzone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        dropzone.style.borderColor = 'var(--primary-purple)';
+        dropzone.style.backgroundColor = 'rgba(168, 85, 247, 0.05)';
+    });
+    dropzone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        dropzone.style.borderColor = 'var(--gray-300)';
+        dropzone.style.backgroundColor = 'var(--gray-50)';
+    });
+    dropzone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        dropzone.style.borderColor = 'var(--gray-300)';
+        dropzone.style.backgroundColor = 'var(--gray-50)';
+        const files = e.dataTransfer.files;
+        if (files.length > 0) { handleFile(files[0]); }
+    });
+    fileInput.addEventListener('change', function(e) {
+        if (e.target.files.length > 0) { handleFile(e.target.files[0]); }
+    });
+    removeButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        fileInput.value = '';
+        dropContent.style.display = 'block';
+        previewArea.style.display = 'none';
+    });
+    function handleFile(file) {
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        if (!allowedTypes.includes(file.type)) {
+            alert('Please select a valid image file (JPG, PNG, GIF)');
+            return;
+        }
+        if (file.size > 16 * 1024 * 1024) {
+            alert('File size must be less than 16MB');
+            return;
+        }
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImage.src = e.target.result;
+            previewName.textContent = file.name;
+            dropContent.style.display = 'none';
+            previewArea.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+</script>
+{% endblock %}

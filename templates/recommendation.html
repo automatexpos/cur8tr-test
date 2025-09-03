@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block title %}{{ recommendation.title }} - {{ category.name }} - {{ profile.name }} - CUR8tr{% endblock %}
+
+{% block content %}
+<!-- <div class="frame8-recommendation-container"> -->
+    <!-- Main Recommendation Card -->
+    <div class="frame8-recommendation-window">
+        <div class="frame8-recommendation-window-title">YOUR RECOMMENDATION</div>
+        <div class="frame8-recommendation-header">
+            <span class="frame8-recommendation-title">{{ recommendation.title }}</span>
+        </div>
+        <div class="frame8-recommendation-content">
+            {% if recommendation.image %}
+                <img src="{{ recommendation.image }}" alt="{{ recommendation.title }}" class="frame8-recommendation-image">
+            {% endif %}
+            <div class="frame8-recommendation-details">
+                <div class="frame8-recommendation-meta-row">
+                    <span class="frame8-recommendation-category">
+                        <i class="fas fa-folder"></i> {{ category.name }}
+                    </span>
+                    {% if recommendation.rating %}
+                        <span class="frame8-recommendation-rating">
+                            {% for i in range(recommendation.rating) %}👍{% endfor %}
+                            <span class="rating-value">({{ recommendation.rating }}/5)</span>
+                        </span>
+                    {% endif %}
+                    {% if recommendation.cost_rating %}
+                        <span class="frame8-recommendation-cost">
+                            <i class="fas fa-dollar-sign"></i> {{ recommendation.cost_rating }}
+                        </span>
+                    {% endif %}
+                </div>
+                <div class="frame8-recommendation-description">
+                    {{ recommendation.description }}
+                </div>
+                {% if recommendation.pro_tip %}
+                    <div class="frame8-recommendation-protip">
+                        <span class="frame8-recommendation-protip-label">💡 Pro Tip:</span>
+                        <span>{{ recommendation.pro_tip }}</span>
+                    </div>
+                {% endif %}
+                {% if recommendation.url %}
+                    <div>
+                        <!-- <span style="font-weight: bold; font-size: 12px;">Link:</span> -->
+                        <a href="{{ recommendation.url }}" target="_blank" rel="noopener" class="frame8-btn-primary" style="margin-left: 8px;">
+                            <i class="fas fa-link"></i> Visit Link
+                        </a>
+                    </div>
+                {% endif %}
+                {% if recommendation.location %}
+                    <div class="frame8-recommendation-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <!-- <span>{{ recommendation.location }}</span> -->
+                        <a href="{{ recommendation.get_google_maps_link() }}" target="_blank" rel="noopener" class="frame8-btn-primary">
+                            View on Google Maps
+                        </a>
+                    </div>
+                {% endif %}
+                {% if recommendation.tags %}
+                    <div class="frame8-recommendation-tags">
+                        {% for tag in recommendation.tags.get('categories', []) %}
+                            <span class="frame8-tag-category">{{ tag }}</span>
+                        {% endfor %}
+                        {% for tag in recommendation.tags.get('collections', []) %}
+                            <span class="frame8-tag-collection">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="frame8-recommendation-actions">
+            <form id="like-form" method="POST" action="{{ url_for('like_recommendation', profile_slug=profile.slug, category_slug=category.slug, rec_id=recommendation.id) }}">
+                <button type="submit" id="like-button" class="frame8-btn-like {% if recommendation.is_liked_by(current_user) %}liked{% endif %}">
+                    <img src="{{ url_for('static', filename='svg/heart.svg') }}" alt="Like" class="frame8-like-svg">
+                    <span id="like-count">{{ recommendation.get_like_count() }}</span>
+                    {% if recommendation.is_liked_by(current_user) %}Unlike{% else %}Like{% endif %}
+                </button>
+            </form>
+            <button onclick="shareRecommendation('{{ recommendation.title }}', '{{ url_for('view_recommendation', profile_slug=profile.slug, category_slug=category.slug, rec_id=recommendation.id, _external=True) }}')" class="frame8-btn-share">
+                <img src="{{ url_for('static', filename='svg/arrow_right.svg') }}" alt="Share" class="frame8-share-svg">
+                Share
+            </button>
+        </div>
+
+        <!-- Likes List -->
+        {% if recommendation.likes %}
+            <div style="margin-top: 12px;">
+                <span class="frame8-liked-by-label">
+                    <img src="{{ url_for('static', filename='svg/heart.svg') }}" alt="Liked" class="frame8-liked-by-svg">
+                    Liked by:
+                </span>
+                <div style="margin-top: 6px; display: flex; gap: 8px; flex-wrap: wrap;">
+                    {% for like in recommendation.likes %}
+                        <span style="background: #B5B0D8; color: #000; padding: 2px 6px; font-size: 10px; border-radius: 3px; display: inline-flex; align-items: center; gap: 4px;">
+                            <i class="fas fa-user" style="font-size: 8px;"></i>
+                            {{ like.user.profile.name if like.user.profile else like.user.username }}
+                        </span>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Comments Section -->
+        <div class="frame8-recommendation-comments">
+            <div class="frame8-comments-title">
+                <i class="fas fa-comments"></i> Comments ({{ recommendation.comments|length }})
+            </div>
+            {% if current_user %}
+                <form method="POST" class="frame8-comment-form">
+                    {{ comment_form.hidden_tag() }}
+                    {{ comment_form.content(class="frame8-form-control", placeholder="Add a comment...") }}
+                    {% if comment_form.content.errors %}
+                        <div style="color: red; font-size: 12px; margin-top: 4px;">
+                            {% for error in comment_form.content.errors %}{{ error }}{% endfor %}
+                        </div>
+                    {% endif %}
+                    <button type="submit" class="frame8-btn-primary">
+                        <i class="fas fa-paper-plane"></i> Post Comment
+                    </button>
+                </form>
+            {% else %}
+                <div class="frame8-comment-login-prompt">
+                    <a href="{{ url_for('login') }}" class="frame8-btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> Login to Comment
+                    </a>
+                </div>
+            {% endif %}
+            {% if recommendation.comments %}
+                <div class="frame8-comments-list">
+                    {% for comment in recommendation.comments %}
+                        <div class="frame8-comment-card">
+                            <div class="frame8-comment-header">
+                                <span><i class="fas fa-user"></i> {{ comment.user.profile.name if comment.user.profile else comment.user.username }}</span>
+                                <span class="frame8-comment-date">{{ comment.created_at.strftime('%b %d, %Y %I:%M %p') }}</span>
+                                {% if current_user and (comment.user_id == current_user.id or recommendation.category.profile.user_id == current_user.id) %}
+                                    <form method="POST" action="{{ url_for('delete_comment', profile_slug=profile.slug, category_slug=category.slug, rec_id=recommendation.id, comment_id=comment.id) }}" style="display: inline;">
+                                        <button type="submit" class="frame8-btn-delete"><i class="fas fa-trash"></i></button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                            <div class="frame8-comment-body">
+                                <p>{{ comment.content }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="frame8-no-comments">
+                    <i class="fas fa-comment-slash"></i> No comments yet. Be the first!
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Footer -->
+        <div class="frame8-recommendation-footer">
+            <span><i class="fas fa-calendar"></i> Added {{ recommendation.created_at.strftime('%b %d, %Y %I:%M %p') }}</span>
+            <div>
+                <a href="{{ url_for('view_category', profile_slug=profile.slug, category_slug=category.slug) }}" class="frame8-btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to {{ category.name }}
+                </a>
+                <a href="{{ url_for('view_profile', slug=profile.slug) }}" class="frame8-btn-secondary">
+                    <i class="fas fa-user"></i> {{ profile.name }}'s Profile
+                </a>
+            </div>
+        </div>
+    </div>
+<!-- </div> -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const likeForm = document.getElementById('like-form');
+    const likeButton = document.getElementById('like-button');
+    const likeCount = document.getElementById('like-count');
+    
+    if (likeForm && likeButton) {
+        likeForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Disable button during request
+            likeButton.disabled = true;
+            
+            fetch(likeForm.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update like count
+                    likeCount.textContent = data.like_count;
+                    
+                    // Update button appearance and text
+                    if (data.is_liked) {
+                        likeButton.style.background = 'var(--primary-pink)';
+                        likeButton.style.color = 'white';
+                        likeButton.style.borderColor = 'var(--primary-pink)';
+                        likeButton.innerHTML = '<i class="fas fa-heart"></i> Unlike';
+                    } else {
+                        likeButton.style.background = 'var(--gray-100)';
+                        likeButton.style.color = 'var(--text-secondary)';
+                        likeButton.style.borderColor = 'var(--gray-200)';
+                        likeButton.innerHTML = '<i class="fas fa-heart"></i> Like';
+                    }
+                    
+                    // Reload page to update "Liked by" section
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 500);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Fallback to regular form submission
+                likeForm.submit();
+            })
+            .finally(() => {
+                likeButton.disabled = false;
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

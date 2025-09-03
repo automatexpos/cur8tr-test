@@ -1,0 +1,38 @@
+{% macro render_personalized_welcome(welcome_message) %}
+<section class="dashboard-figma">
+  <div class="dashboard-figma-header">
+    <div class="dashboard-figma-greeting">{{ welcome_message.greeting }}</div>
+    <div class="dashboard-figma-subheader">
+      <div class="dashboard-figma-title">Create & Share Your Curated Recommendations</div>
+      <div class="dashboard-figma-desc">
+        Start by setting up your profile and adding categories for things you're passionate about.
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro render_dashboard_stats(stats) %}
+  <div class="dashboard-figma-stats-row">
+    <div class="dashboard-figma-stat">
+      <div class="dashboard-figma-stat-value">{{ stats.total_categories }}</div>
+      <div class="dashboard-figma-stat-label">Categories</div>
+    </div>
+    <div class="dashboard-figma-stat">
+      <div class="dashboard-figma-stat-value">{{ stats.total_recommendations }}</div>
+      <div class="dashboard-figma-stat-label">Recommendations</div>
+    </div>
+    <div class="dashboard-figma-stat">
+      <div class="dashboard-figma-stat-value">{{ stats.total_followers }}</div>
+      <div class="dashboard-figma-stat-label">Followers</div>
+    </div>
+    <div class="dashboard-figma-stat">
+      <div class="dashboard-figma-stat-value">{{ stats.total_likes }}</div>
+      <div class="dashboard-figma-stat-label">Total Likes</div>
+    </div>
+    <div class="dashboard-figma-stat">
+      <div class="dashboard-figma-stat-value">{{ stats.total_comments }}</div>
+      <div class="dashboard-figma-stat-label">Comments</div>
+    </div>
+  </div>
+</section>
+{% endmacro %}

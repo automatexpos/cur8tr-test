@@ -1,0 +1,425 @@
+{% extends "base.html" %}
+
+{% block title %}Recommendations - Dashboard - CUR8tr{% endblock %}
+
+{% block body_class %}cur8tr-recs-bg{% endblock %}
+
+{% block content %}
+<style>
+body.cur8tr-recs-bg {
+    background: #ECBED9 !important;
+}
+body.cur8tr-recs-bg header.main-header {
+    background: #ECBED9 !important;
+}
+
+.cur8tr-frame8 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px;
+    gap: 50px;
+    position: absolute;
+    width: 1320px;
+    height: 562px;
+    left: calc(50% - 1320px/2);
+    top: 173px;
+    background: #FDF0F0;
+    border: 4px solid #000000;
+    box-shadow: 9px 12px 0px #000000;
+    border-radius: 30px;
+    box-sizing: border-box;
+}
+
+.cur8tr-recs-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 0;
+    min-height: 80vh;
+    background: #ECBED9 !important;    
+}
+.cur8tr-recs-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 1140px;
+    margin-bottom: 32px;
+    background: #FDF0F0 !important;    
+}
+.cur8tr-recs-title {
+    font-family: 'Barlow', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: #2C2C2E;
+    margin: 0;
+}
+.cur8tr-recs-add-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #B3E0DD;
+    border: 2px solid #000;
+    border-radius: 110px;
+    padding: 10px 24px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #2C2C2E;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+.cur8tr-recs-add-btn:hover {
+    background: #DCE45F;
+}
+.cur8tr-recs-add-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Recommendations grid for 3 cards per row */
+.cur8tr-recs-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    justify-content: center;
+    align-items: flex-start;
+    width: 1224px; /* 3 × 380px + 2 × 32px gap */
+    margin: 0 auto;
+}
+
+/* Recommendation Card (Frame 25) */
+.cur8tr-rec-card {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 20px 20px 30px;
+    gap: 12px;
+    width: 380px;
+    height: 336px;
+    background: #B3E0DD;
+    border: 4px solid #000000;
+    box-shadow: 7px 8px 0px #000000;
+    border-radius: 26px;
+    box-sizing: border-box;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+    position: relative;
+}
+
+/* Top Row: Category Tag + Cost Rating */
+.cur8tr-rec-card-toprow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0;
+}
+.cur8tr-rec-card-secondrow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0;
+}
+.cur8tr-rec-card-cat-tag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #B3E0DD;
+    padding: 2px 10px 2px 6px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #25314C;
+}
+.cur8tr-rec-card-cat-svg {
+    width: 18px;
+    height: 18px;
+    margin-right: 2px;
+}
+.cur8tr-rec-card-cost {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    background: #B3E0DD;
+    padding: 2px 10px 2px 6px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #25314C;
+}
+.cur8tr-rec-card-cost-svg {
+    width: 18px;
+    height: 18px;
+    margin-right: 2px;
+}
+
+.cur8tr-rec-card-rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    background: #B3E0DD;
+    padding: 2px 10px 2px 6px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #25314C;
+}
+.cur8tr-rec-card-rating-svg {
+    width: 18px;
+    height: 18px;
+    margin-right: 2px;
+}
+
+/* Title */
+.cur8tr-rec-card-title {
+    font-family: 'Barlow', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    color: #2C2C2E;
+    margin: 0 0 0 0;
+    padding: 0;
+    line-height: 1.2;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Description */
+.cur8tr-rec-card-desc {
+    width: 100%;
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    color: #2C2C2E;
+    background: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    min-height: 36px;
+    box-sizing: border-box;
+    margin-bottom: 0;
+}
+
+/* Tags Row */
+.cur8tr-rec-card-tags-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 0;
+    flex-wrap: wrap;
+}
+.cur8tr-rec-card-tag {
+    display: inline-block;
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 2px 14px;
+    border-radius: 12px;
+    border: 1.5px solid #000;
+    background: #FDF0F0;
+    color: #2C2C2E;
+    margin-bottom: 2px;
+}
+.cur8tr-rec-card-tag.collection {
+    background: #DCE45F;
+    color: #2C2C2E;
+    border: 1.5px solid #000;
+}
+
+/* Date Row */
+.cur8tr-rec-card-date-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px;
+    color: #2C2C2E;
+    margin-bottom: 0;
+}
+.cur8tr-rec-card-date-svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Actions Row */
+.cur8tr-rec-card-actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    gap: 10px;
+}
+.cur8tr-rec-card-delete,
+.cur8tr-rec-card-edit {
+    font-family: 'Barlow', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 10px 28px;
+    border-radius: 16px;
+    border: 2px solid #000;
+    background: #FDF0F0;
+    color: #2C2C2E;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 2px 3px 0px #000000;
+}
+.cur8tr-rec-card-delete {
+    background: #fff;
+}
+.cur8tr-rec-card-delete:hover {
+    background: #f44336;
+    color: #fff;
+}
+.cur8tr-rec-card-edit {
+    background: #ECBED9;
+}
+.cur8tr-rec-card-edit:hover {
+    background: #DCE45F;
+    color: #2C2C2E;
+}
+.cur8tr-rec-card-action-svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 6px;
+}
+
+/* Responsive: stack cards on smaller screens */
+@media (max-width: 1224px) {
+    .cur8tr-recs-header-row,
+    .cur8tr-recs-grid {
+        width: 100%;
+        max-width: 100vw;
+        gap: 24px;
+    }
+    .cur8tr-rec-card {
+        width: 100%;
+        max-width: 380px;
+    }
+}
+</style>
+<div class="cur8tr-recs-container">
+    <div class="cur8tr-frame8">
+    <div class="cur8tr-recs-header-row">
+        <h2 class="cur8tr-recs-title">Your Recommendations</h2>
+        <a href="{{ url_for('new_recommendation') }}" class="cur8tr-recs-add-btn">
+            <img src="{{ url_for('static', filename='svg/plus-circle.svg') }}" alt="Add" class="cur8tr-recs-add-icon">
+            <span>New Recommendation</span>
+        </a>
+    </div>
+
+    {% if recommendations %}
+    {% set category_svg_map = {
+        'Apps': 'apps.svg',
+        'Products': 'products.svg',
+        'YouTube Channels': 'youtube.svg',
+        'Food': 'food.svg',
+        'Books': 'books.svg',
+        'Where To Stay': 'stay.svg',
+        'Festivals': 'festivals.svg'
+    } %}
+        <div class="cur8tr-recs-grid">
+            {% for rec in recommendations %}
+            <div class="cur8tr-rec-card">
+                <!-- Top Row: Category Tag (left) & Rating (right) -->
+                <div class="cur8tr-rec-card-toprow">
+                    <span class="cur8tr-rec-card-cat-tag">
+                        <img src="{{ url_for('static', filename='svg/' ~ category_svg_map.get(rec.category.name, 'category.svg')) }}" alt="{{ rec.category.name }}" class="cur8tr-rec-card-cat-svg">
+                        {{ rec.category.name }}
+                    </span>
+                    <span class="cur8tr-rec-card-rating">
+                        {% for i in range(rec.rating) %}
+                            <img src="{{ url_for('static', filename='svg/like.svg') }}" alt="Rating" class="cur8tr-rec-card-rating-svg">
+                        {% endfor %}
+                        {% if rec.rating == 5 %}Absolutely love it!
+                        {% elif rec.rating == 4 %}Really great
+                        {% elif rec.rating == 3 %}Pretty good
+                        {% elif rec.rating == 2 %}It's okay
+                        {% else %}Meh, not great
+                        {% endif %}
+                    </span>
+                </div>
+                <!-- Title & Cost -->
+                <div class="cur8tr-rec-card-secondrow">
+                    <div class="cur8tr-rec-card-title">{{ rec.title }}</div>
+                    <span class="cur8tr-rec-card-cost">
+                        {% set cost_map = {'$': 1, '$$': 2, '$$$': 3, '$$$$': 4} %}
+                        {% for i in range(cost_map.get(rec.cost_rating, 1)) %}
+                            <img src="{{ url_for('static', filename='svg/dollar-circle.svg') }}" alt="Cost" class="cur8tr-rec-card-cost-svg">
+                        {% endfor %}
+                        {% if rec.cost_rating == '$' %}Budget Friendly
+                        {% elif rec.cost_rating == '$$' %}Moderate
+                        {% elif rec.cost_rating == '$$$' %}Expensive
+                        {% elif rec.cost_rating == '$$$$' %}Premium/Luxury
+                        {% else %}Budget Friendly
+                        {% endif %}
+                    </span>
+                </div>
+                <!-- Description -->
+                {% if rec.description %}
+                    <div class="cur8tr-rec-card-desc">
+                        {{ rec.description[:100] }}{% if rec.description|length > 100 %}...{% endif %}
+                    </div>
+                {% endif %}
+                <!-- Tags: Category and Collection -->
+                <div class="cur8tr-rec-card-tags-row">
+                    {% for tag in rec.tags.get('categories', []) %}
+                        <span class="cur8tr-rec-card-tag">{{ tag }}</span>
+                    {% endfor %}
+                    {% for tag in rec.tags.get('collections', []) %}
+                        <span class="cur8tr-rec-card-tag collection">{{ tag }}</span>
+                    {% endfor %}
+                </div>
+                <!-- Date Row -->
+                <div class="cur8tr-rec-card-date-row">
+                    <img src="{{ url_for('static', filename='svg/calendar.svg') }}" alt="Date" class="cur8tr-rec-card-date-svg">
+                    Added {{ rec.created_at.strftime('%d %B %Y') }}
+                </div>
+                <!-- Actions Row -->
+                <div class="cur8tr-rec-card-actions">
+                    <form method="POST" action="{{ url_for('delete_recommendation', rec_id=rec.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete \'{{ rec.title }}\'? This action cannot be undone.')">
+                        <button type="submit" class="cur8tr-rec-card-delete">
+                            <img src="{{ url_for('static', filename='svg/times-circle.svg') }}" alt="Delete" class="cur8tr-rec-card-action-svg">
+                            Delete
+                        </button>
+                    </form>
+                    <a href="{{ url_for('edit_recommendation', rec_id=rec.id) }}" class="cur8tr-rec-card-edit">
+                        <img src="{{ url_for('static', filename='svg/floppy-disk.svg') }}" alt="Edit" class="cur8tr-rec-card-action-svg">
+                        Edit
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="cur8tr-recs-empty">
+            <i class="icon icon-star cur8tr-recs-empty-icon"></i>
+            <h3 class="cur8tr-recs-empty-title">No Recommendations Yet</h3>
+            <p class="cur8tr-recs-empty-desc">Start building your curated list of recommendations!</p>
+            {% if profile.categories %}
+                <a href="{{ url_for('new_recommendation') }}" class="cur8tr-recs-add-btn">
+                    <img src="{{ url_for('static', filename='svg/plus-circle.svg') }}" alt="Add" class="cur8tr-recs-add-icon">
+                    <span>Add First Recommendation</span>
+                </a>
+            {% else %}
+                <p style="color: #666; font-size: 10px; margin-bottom: 16px;">
+                    You need to create a category first before adding recommendations.
+                </p>
+                <a href="{{ url_for('new_category') }}" class="cur8tr-recs-add-btn">
+                    <i class="icon icon-category"></i> Create Category First
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+</div>
+
+{% endblock %}

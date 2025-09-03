@@ -1,0 +1,58 @@
+<div class="window">
+    <div class="window-header">
+        <span class="category-form-title">{{ title }}</span>
+    </div>
+    <div class="window-content">
+        <form method="POST" action="{{ url_for('new_category') }}">
+            {{ form.hidden_tag() if form.hidden_tag }}
+            <div class="form-field-col">
+                {{ form.name(class="form-control", placeholder="Category Name") }}
+                {% if form.name.errors %}
+                    <div class="form-error">
+                        {% for error in form.name.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form-field-col">
+                {{ form.description(class="form-control form-description", placeholder="Description") }}
+                {% if form.description.errors %}
+                    <div class="form-error">
+                        {% for error in form.description.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form-actions">
+                <a href="{{ url_for('dashboard_categories') }}" class="btn btn-cancel">
+                    <img src="{{ url_for('static', filename='svg/times-circle.svg') }}" alt="Cancel" style="width:28px;height:28px;">
+                    <span>Cancel</span>
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <img src="{{ url_for('static', filename='svg/floppy-disk.svg') }}" alt="Save" style="width:28px;height:28px;">
+                    <span>Save Category</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<style>
+.category-form-title {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    gap: 10px;
+    width: 516px;
+    height: 80px;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 900;
+    font-size: 48px;
+    line-height: 80px;
+    color: #2C2C2E;
+    text-align: center;
+    text-transform: uppercase;
+    align-self: stretch;
+    flex-grow: 0;
+    margin: 0 auto;
+}
+</style>

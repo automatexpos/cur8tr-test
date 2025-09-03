@@ -1,0 +1,336 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Dashboard - CUR8tr{% endblock %}
+
+{% block content %}
+<style>
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: #DCE45F !important;
+}
+body {
+    min-height: 100vh;
+}
+.container {
+    background: #DCE45F !important;
+}
+.main-header {
+    background: #DCE45F !important;
+}
+.main-header > img {
+    background: #DCE45F !important;
+}
+.cur8tr-frame8 {
+    /* Remove absolute/fixed positioning and fixed height */
+    position: relative;
+    width: 1320px;
+    margin: 60px auto 40px auto; /* Center and add spacing */
+    padding: 60px 100px;
+    background: #ecbed9;
+    border: 4px solid #000000;
+    box-shadow: 9px 12px 0px #000000;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 50px;
+    min-height: 600px; /* Let it grow as needed */
+    box-sizing: border-box;
+}
+</style>
+<div class="cur8tr-frame8">
+    <div class="cur8tr-frame7">
+        <h1 class="cur8tr-frame7-heading">NEW Recommendations</h1>
+    </div>
+    <div class="cur8tr-frame49">
+        <form method="POST" enctype="multipart/form-data" class="cur8tr-form">
+            {{ form.hidden_tag() if form.hidden_tag }}
+            <div class="cur8tr-frame44">
+                <div class="cur8tr-frame34">
+                    <!-- Category Select -->
+                    <div class="cur8tr-frame5">
+                        <img src="{{ url_for('static', filename='svg/username.svg') }}" alt="User" class="cur8tr-frame5-icon">
+                        <select name="category_id" class="cur8tr-frame5-select" required>
+                            <option value="" disabled selected>Select Category</option>
+                            {% for value, label in form.category_id.choices %}
+                                <option value="{{ value }}" {% if form.category_id.data == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                        <img src="{{ url_for('static', filename='svg/caret-down.svg') }}" alt="Caret" class="cur8tr-frame5-caret">
+                    </div>
+                    <!-- Title Input -->
+                    <div class="cur8tr-frame4">
+                        <img src="{{ url_for('static', filename='svg/document.svg') }}" alt="Document" class="cur8tr-frame4-icon">
+                        {{ form.title(class="cur8tr-frame4-input", placeholder="Enter Title") }}
+                    </div>
+                    <!-- Rating Select -->
+                    <div class="cur8tr-frame46">
+                        <div class="cur8tr-frame19">
+                            <!-- {% for i in range(5) %}
+                                <span class="cur8tr-frame19-like"></span>
+                            {% endfor %} -->
+                            <img src="{{ url_for('static', filename='svg/like.svg') }}" alt="Rating" class="cur8tr-frame4-icon">
+                            <span class="cur8tr-frame19-label">Rating</span>
+                            <!-- <img src="{{ url_for('static', filename='svg/caret-down.svg') }}" alt="Caret" class="cur8tr-frame19-caret"> -->
+                        </div>
+                        {{ form.rating(class="cur8tr-frame46-select") }}
+                    </div>
+                    <!-- Cost Select -->
+                    <div class="cur8tr-frame47">
+                        <img src="{{ url_for('static', filename='svg/dollar-circle.svg') }}" alt="Dollar" class="cur8tr-frame47-icon">
+                            <select name="cost_rating" class="cur8tr-frame47-select" required>
+                                <option value="" disabled selected>Budget Friendly</option>
+                                {% for value, label in form.cost_rating.choices %}
+                                    <option value="{{ value }}" {% if form.cost_rating.data == value %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                            <img src="{{ url_for('static', filename='svg/caret-down.svg') }}" alt="Caret" class="cur8tr-frame47-caret">
+                    </div>
+                </div>
+                <div class="cur8tr-frame6-upload">
+                    <img src="{{ url_for('static', filename='svg/image-upload.svg') }}" alt="Upload" class="cur8tr-frame6-upload-icon">
+                    <span class="cur8tr-frame6-upload-label">Upload Recommendation Image</span>
+                    <div id="dropzone" class="cur8tr-frame6-dropzone">
+                        <div id="drop-content">
+                            <span>Drag & drop image here or click to browse</span>
+                            <span>JPG, PNG, GIF (max 16MB)</span>
+                        </div>
+                        <div id="preview-area" style="display: none;">
+                            <img id="preview-image" class="cur8tr-frame6-preview-img">
+                            <span id="preview-name" class="cur8tr-frame6-preview-name"></span>
+                            <button type="button" id="remove-image" class="cur8tr-frame6-remove-btn">Remove</button>
+                        </div>
+                    </div>
+                    {{ form.image(style="display: none;", id="file-input") }}
+                </div>
+            </div>
+            <div class="cur8tr-frame48">
+                <div class="cur8tr-frame34-desc">
+                    <div class="cur8tr-frame3-desc">
+                        <span class="cur8tr-frame3-desc-label">Description . . .</span>
+                        {{ form.description(class="cur8tr-frame3-desc-input", placeholder="Why do you recommend this?") }}
+                    </div>
+                    <div class="cur8tr-frame6-url">
+                        <img src="{{ url_for('static', filename='svg/link-horizontal.svg') }}" alt="Link" class="cur8tr-frame6-url-icon">
+                        {{ form.url(class="cur8tr-frame6-url-input", placeholder="URL") }}
+                    </div>
+                </div>
+                <div class="cur8tr-frame45">
+                    <div class="cur8tr-frame3-tip">
+                        <span class="cur8tr-frame3-tip-label">Pro Tip</span>
+                        {{ form.pro_tip(class="cur8tr-frame3-tip-input", placeholder="Share an insider tip or secret about this recommendation...") }}
+                    </div>
+                    <div class="cur8tr-frame6-location">
+                        <img src="{{ url_for('static', filename='svg/location-pin.svg') }}" alt="Location" class="cur8tr-frame6-location-icon">
+                        {{ form.location(class="cur8tr-frame6-location-input", placeholder="Location") }}
+                    </div>
+                </div>
+            </div>
+            <div class="cur8tr-frame32-tags">
+                <div class="cur8tr-frame37-tags">
+                    <h2 class="cur8tr-frame37-heading">Tags</h2>
+                    <p class="cur8tr-frame37-desc">Add tags to help organize and filter your recommendations. Use categories for broad topics and collections for personal groupings.</p>
+                </div>
+                <div class="cur8tr-frame50-category">
+                    <div class="cur8tr-frame6-tag">
+                        <img src="{{ url_for('static', filename='svg/tag.svg') }}" alt="Tag" class="cur8tr-frame6-tag-icon">
+                        {{ form.category_tags(class="cur8tr-frame6-tag-input", placeholder="Enter Category Tags") }}
+                    </div>
+                    <div class="cur8tr-frame40-category">
+                        <span class="cur8tr-frame40-category-label">Popular Categories</span>
+                        <button type="button" class="cur8tr-frame1-cat-tag" data-tag="Food">Food</button>
+                        <button type="button" class="cur8tr-frame34-cat-tag" data-tag="Coffee">Coffee</button>
+                        <button type="button" class="cur8tr-frame36-cat-tag" data-tag="Books">Books</button>
+                        <button type="button" class="cur8tr-frame37-cat-tag" data-tag="Apps">Apps</button>
+                        <button type="button" class="cur8tr-frame38-cat-tag" data-tag="Hotels">Hotels</button>
+                    </div>
+                </div>
+                <div class="cur8tr-frame51-collection">
+                    <div class="cur8tr-frame6-tag">
+                        <img src="{{ url_for('static', filename='svg/tag.svg') }}" alt="Tag" class="cur8tr-frame6-tag-icon">
+                        {{ form.collection_tags(class="cur8tr-frame6-tag-input", placeholder="Enter Collection Tags") }}
+                    </div>
+                    <div class="cur8tr-frame40-collection">
+                        <span class="cur8tr-frame40-collection-label">Example Collections</span>
+                        <button type="button" class="cur8tr-frame35-tag">Sayulita</button>
+                        <button type="button" class="cur8tr-frame36-tag">Summer 2025</button>
+                        <button type="button" class="cur8tr-frame37-tag">Date Night</button>
+                        <button type="button" class="cur8tr-frame38-tag">Work Tools</button>
+                    </div>
+                </div>
+            </div>
+            <div class="cur8tr-frame6-actions">
+            <button type="button" class="cur8tr-frame4-cancel" onclick="window.history.back();">
+                <img src="{{ url_for('static', filename='svg/times-circle.svg') }}" alt="Cancel" class="cur8tr-frame4-cancel-icon">
+                <span>Cancel</span>
+            </button>
+                <button type="submit" class="cur8tr-frame1-save">
+                    <img src="{{ url_for('static', filename='svg/floppy-disk.svg') }}" alt="Save" class="cur8tr-frame1-save-icon">
+                    <span>Save Recommendation</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('file-input');
+    const dropContent = document.getElementById('drop-content');
+    const previewArea = document.getElementById('preview-area');
+    const previewImage = document.getElementById('preview-image');
+    const previewName = document.getElementById('preview-name');
+    const removeButton = document.getElementById('remove-image');
+    
+    // Click to browse
+    dropzone.addEventListener('click', function() {
+        fileInput.click();
+    });
+    
+    // Drag and drop events
+    dropzone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        dropzone.style.borderColor = 'var(--primary-cyan)';
+        dropzone.style.backgroundColor = 'rgba(6, 182, 212, 0.1)';
+    });
+    
+    dropzone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        dropzone.style.borderColor = 'var(--primary-purple)';
+        dropzone.style.backgroundColor = 'rgba(168, 85, 247, 0.05)';
+    });
+    
+    dropzone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        dropzone.style.borderColor = 'var(--primary-purple)';
+        dropzone.style.backgroundColor = 'rgba(168, 85, 247, 0.05)';
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFile(files[0]);
+        }
+    });
+    
+    // File input change
+    fileInput.addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            handleFile(e.target.files[0]);
+        }
+    });
+    
+    // Remove button
+    removeButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        fileInput.value = '';
+        dropContent.style.display = 'block';
+        previewArea.style.display = 'none';
+    });
+    
+    function handleFile(file) {
+        // Validate file type
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+        if (!allowedTypes.includes(file.type)) {
+            alert('Please select a valid image file (JPG, PNG, GIF)');
+            return;
+        }
+        
+        // Validate file size (16MB)
+        if (file.size > 16 * 1024 * 1024) {
+            alert('File size must be less than 16MB');
+            return;
+        }
+        
+        // Create FileList for the input
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
+        
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImage.src = e.target.result;
+            previewName.textContent = file.name;
+            dropContent.style.display = 'none';
+            previewArea.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // Tag suggestion functionality
+    document.querySelectorAll('.tag-suggestion').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const tag = this.getAttribute('data-tag');
+            const isCategory = this.closest('.form-group').querySelector('label').textContent.includes('Category');
+            const inputId = isCategory ? 'category_tags' : 'collection_tags';
+            const input = document.getElementById(inputId);
+            
+            // Add tag to input (comma-separated)
+            let currentValue = input.value.trim();
+            if (currentValue) {
+                const tags = currentValue.split(',').map(t => t.trim());
+                if (!tags.includes(tag)) {
+                    tags.push(tag);
+                    input.value = tags.join(', ');
+                }
+            } else {
+                input.value = tag;
+            }
+            
+            // Visual feedback
+            this.style.background = isCategory ? '#b3e5fc' : '#c8e6c9';
+            setTimeout(() => {
+                this.style.background = isCategory ? '#e0f2fe' : '#e8f5e8';
+            }, 200);
+        });
+    });
+});
+// Add category tag to input when button is clicked
+document.querySelectorAll('.cur8tr-frame40-category button[data-tag]').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const tag = this.getAttribute('data-tag');
+        // Find the category tags input
+        const input = document.querySelector('.cur8tr-frame6-tag-input[name="category_tags"]');
+        if (input) {
+            let currentValue = input.value.trim();
+            let tags = currentValue ? currentValue.split(',').map(t => t.trim()) : [];
+            if (!tags.includes(tag)) {
+                tags.push(tag);
+                input.value = tags.join(', ');
+            }
+        }
+        // Visual feedback
+        this.style.background = '#b3e5fc';
+        setTimeout(() => {
+            this.style.background = '#B5B0D8';
+        }, 200);
+    });
+});
+// Add collection tag to input when button is clicked
+document.querySelectorAll('.cur8tr-frame40-collection button').forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const tag = this.textContent.trim();
+        // Find the collection tags input
+        const input = document.querySelector('.cur8tr-frame6-tag-input[name="collection_tags"]');
+        if (input) {
+            let currentValue = input.value.trim();
+            let tags = currentValue ? currentValue.split(',').map(t => t.trim()) : [];
+            if (!tags.includes(tag)) {
+                tags.push(tag);
+                input.value = tags.join(', ');
+            }
+        }
+        // Visual feedback
+        this.style.background = '#dce45f';
+        setTimeout(() => {
+            this.style.background = '#DCE45F';
+        }, 200);
+    });
+});
+</script>
+{% endblock %}

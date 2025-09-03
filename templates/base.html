@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}CUR8tr{% endblock %}</title>
+  <!-- Fonts from Figma design -->
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@700&family=Anton&family=Fredoka+One&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/layout.css') }}" rel="stylesheet">
+  {% block styles %}{% endblock %}
+
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+    <!-- === HEADER === -->
+    <header class="main-header">
+    <!-- Logo -->
+    <img src="{{ url_for('static', filename='img/logo_new.png') }}" alt="CUR8tr Logo"
+        style="width: 109px; height: 103px; border-radius: 18px; object-fit:cover; background:#fff; border:0;">
+    <!-- Navigation Buttons -->
+    <nav class="main-nav">
+        <a href="{{ url_for('home') }}" class="nav-btn">
+        <img src="{{ url_for('static', filename='svg/home.svg') }}" alt="Home" width="28" height="28">
+        <span>Home</span>
+        </a>
+        {% if session.user_id %}
+        <a href="{{ url_for('dashboard') }}" class="nav-btn nav-dashboard">
+        <img src="{{ url_for('static', filename='svg/dashboard.svg') }}" alt="Dashboard" width="28" height="28">
+        <span>Dashboard</span>
+        </a>
+        <a href="{{ url_for('logout') }}" class="nav-btn nav-logout">
+        <img src="{{ url_for('static', filename='svg/logout.svg') }}" alt="Logout" width="28" height="28" style="background-color: #ECBED9;">
+        <span>Logout</span>
+        </a>
+        {% else %}
+        <a href="{{ url_for('login') }}" class="nav-btn">
+        <img src="{{ url_for('static', filename='svg/login.svg') }}" alt="Login" width="28" height="28">
+        <span>Login</span>
+        </a>
+        <a href="{{ url_for('register') }}" class="nav-btn nav-register">
+        <img src="{{ url_for('static', filename='svg/getstarted.svg') }}" alt="Get Started" width="28" height="28" style="background:#dff16a;">
+        <span>Get Started</span>
+        </a>
+        {% endif %}
+    </nav>
+    </header>
+    <!-- Elegant Message System -->
+    {% include 'components/messages.html' %}
+    <!-- Main Content -->
+    <main class="container" style="margin-top: 2rem; margin-bottom: 2rem;">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- === FOOTER === -->
+<footer style="background:#0e0e0e;padding:36px;text-align:center;margin-top:34px;">
+  <img src="{{ url_for('static', filename='img/logo_new.png') }}" alt="CUR8tr Logo" 
+  style="width: 84px; height: 84px; border-radius: 14px;">
+  <div style="color:#fff;font-size:22px;font-weight:700;margin-top:4px;margin-bottom:2px;">
+  </div>
+  <p style="color:#fff;margin-top:12px;font-size:34px;font-weight:900;letter-spacing:0.5px;font-family:'Barlow';">
+    © 2025 CUR8tr - curated rec lists
+  </p>
+</footer>
+</body>
+
+    <!-- JavaScript -->
+    <script>
+        // Simple confirmation dialogs for delete actions
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteButtons = document.querySelectorAll('[data-confirm]');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const message = this.getAttribute('data-confirm');
+                    if (!confirm(message)) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        });
+
+        // Auto-hide flash messages after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                alert.style.transition = 'opacity 0.5s';
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 500);
+            });
+        }, 5000);
+    </script>
+
+    <!-- Share Functionality Script -->
+    <script>
+        function shareRecommendation(title, url) {
+            // Use current page if no specific title/url provided
+            if (!title) title = document.title;
+            if (!url) url = window.location.href;
+            
+            const shareText = `Check out this recommendation: ${title}`;
+            
+            // Check if Web Share API is supported and can share URLs
+            if (navigator.share && navigator.canShare && navigator.canShare({ url: url })) {
+                navigator.share({
+                    title: title,
+                    text: shareText,
+                    url: url
+                }).catch(err => {
+                    console.log('Web Share failed, using fallback:', err);
+                    fallbackShare(title, url, shareText);
+                });
+            } else {
+                // Fallback for desktop browsers or unsupported devices
+                fallbackShare(title, url, shareText);
+            }
+        }
+        
+        function fallbackShare(title, url, shareText) {
+            // Create enhanced share modal with more platforms
+            const modal = document.createElement('div');
+            modal.innerHTML = `
+                <div style="
+                    position: fixed; 
+                    top: 0; 
+                    left: 0; 
+                    width: 100%; 
+                    height: 100%; 
+                    background: rgba(0,0,0,0.7); 
+                    display: flex; 
+                    align-items: center; 
+                    justify-content: center; 
+                    z-index: 1000;
+                    backdrop-filter: blur(4px);
+                " onclick="this.remove()">
+                    <div style="
+                        background: linear-gradient(135deg, #f8f9fa, #e9ecef); 
+                        padding: 28px; 
+                        border-radius: 16px; 
+                        max-width: 450px; 
+                        width: 90%;
+                        box-shadow: 0 12px 48px rgba(0,0,0,0.15);
+                        border: 1px solid rgba(255,255,255,0.2);
+                    " onclick="event.stopPropagation()">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                            <i class="fas fa-share-alt" style="color: #6c757d; font-size: 20px;"></i>
+                            <h3 style="margin: 0; font-size: 18px; color: #343a40;">Share this recommendation</h3>
+                            <button onclick="this.closest('.modal').remove()" style="margin-left: auto; background: none; border: none; font-size: 18px; color: #6c757d; cursor: pointer; padding: 4px;">×</button>
+                        </div>
+                        
+                        <!-- URL Preview -->
+                        <div style="background: rgba(255,255,255,0.8); padding: 12px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #dee2e6;">
+                            <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px; color: #495057;">${title}</div>
+                            <div style="font-size: 12px; color: #6c757d; word-break: break-all;">${url}</div>
+                        </div>
+                        
+                        <!-- Social Media Platforms -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 12px; margin-bottom: 20px;">
+                            <button onclick="shareToWhatsApp('${encodeURIComponent(shareText)}', '${encodeURIComponent(url)}'); this.closest('div[style*=\"fixed\"]').remove();"
+                               style="display: flex; flex-direction: column; align-items: center; padding: 16px 12px; background: #25D366; color: white; border: none; border-radius: 10px; cursor: pointer; transition: transform 0.2s; text-decoration: none;">
+                                <i class="fab fa-whatsapp" style="font-size: 24px; margin-bottom: 6px;"></i>
+                                <span style="font-size: 11px; font-weight: 500;">WhatsApp</span>
+                            </button>
+                            
+                            <button onclick="shareToTwitter('${encodeURIComponent(shareText)}', '${encodeURIComponent(url)}'); this.closest('div[style*=\"fixed\"]').remove();"
+                               style="display: flex; flex-direction: column; align-items: center; padding: 16px 12px; background: #1DA1F2; color: white; border: none; border-radius: 10px; cursor: pointer; transition: transform 0.2s;">
+                                <i class="fab fa-twitter" style="font-size: 24px; margin-bottom: 6px;"></i>
+                                <span style="font-size: 11px; font-weight: 500;">Twitter</span>
+                            </button>
+                            
+                            <button onclick="shareToFacebook('${encodeURIComponent(url)}'); this.closest('div[style*=\"fixed\"]').remove();"
+                               style="display: flex; flex-direction: column; align-items: center; padding: 16px 12px; background: #4267B2; color: white; border: none; border-radius: 10px; cursor: pointer; transition: transform 0.2s;">
+                                <i class="fab fa-facebook" style="font-size: 24px; margin-bottom: 6px;"></i>
+                                <span style="font-size: 11px; font-weight: 500;">Facebook</span>
+                            </button>
+                            
+                            <button onclick="shareToLinkedIn('${encodeURIComponent(shareText)}', '${encodeURIComponent(url)}'); this.closest('div[style*=\"fixed\"]').remove();"
+                               style="display: flex; flex-direction: column; align-items: center; padding: 16px 12px; background: #0077B5; color: white; border: none; border-radius: 10px; cursor: pointer; transition: transform 0.2s;">
+                                <i class="fab fa-linkedin" style="font-size: 24px; margin-bottom: 6px;"></i>
+                                <span style="font-size: 11px; font-weight: 500;">LinkedIn</span>
+                            </button>
+                            
+                            <button onclick="shareToReddit('${encodeURIComponent(title)}', '${encodeURIComponent(url)}'); this.closest('div[style*=\"fixed\"]').remove();"
+                               style="display: flex; flex-direction: column; align-items: center; padding: 16px 12px; background: #FF4500; color: white; border: none; border-radius: 10px; cursor: pointer; transition: transform 0.2s;">
+                                <i class="fab fa-reddit" style="font-size: 24px; margin-bottom: 6px;"></i>
+                                <span style="font-size: 11px; font-weight: 500;">Reddit</span>
+                            </button>
+                            
+                            <button onclick="shareViaEmail('${encodeURIComponent(title)}', '${encodeURIComponent(shareText)}', '${encodeURIComponent(url)}'); this.closest('div[style*=\"fixed\"]').remove();"
+                               style="display: flex; flex-direction: column; align-items: center; padding: 16px 12px; background: #EA4335; color: white; border: none; border-radius: 10px; cursor: pointer; transition: transform 0.2s;">
+                                <i class="fas fa-envelope" style="font-size: 24px; margin-bottom: 6px;"></i>
+                                <span style="font-size: 11px; font-weight: 500;">Email</span>
+                            </button>
+                        </div>
+                        
+                        <!-- Copy Link Section -->
+                        <div style="border-top: 1px solid #dee2e6; padding-top: 16px;">
+                            <button onclick="copyToClipboard('${url}', this)" 
+                                   style="width: 100%; padding: 12px; background: linear-gradient(135deg, #28a745, #20c997); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: transform 0.2s;">
+                                <i class="fas fa-copy" style="margin-right: 8px;"></i>
+                                <span class="copy-text">Copy Link</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add hover effects
+            modal.querySelectorAll('button[style*="background:"]').forEach(btn => {
+                btn.addEventListener('mouseenter', () => btn.style.transform = 'scale(1.05)');
+                btn.addEventListener('mouseleave', () => btn.style.transform = 'scale(1)');
+            });
+            
+            document.body.appendChild(modal);
+        }
+        
+        // Enhanced platform-specific sharing functions
+        function shareToWhatsApp(text, url) {
+            const whatsappUrl = `https://wa.me/?text=${text}%20${url}`;
+            window.open(whatsappUrl, '_blank', 'width=600,height=400');
+        }
+        
+        function shareToTwitter(text, url) {
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${url}`;
+            window.open(twitterUrl, '_blank', 'width=600,height=400');
+        }
+        
+        function shareToFacebook(url) {
+            const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+            window.open(facebookUrl, '_blank', 'width=600,height=400');
+        }
+        
+        function shareToLinkedIn(text, url) {
+            const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
+            window.open(linkedinUrl, '_blank', 'width=600,height=400');
+        }
+        
+        function shareToReddit(title, url) {
+            const redditUrl = `https://reddit.com/submit?title=${title}&url=${url}`;
+            window.open(redditUrl, '_blank', 'width=600,height=400');
+        }
+        
+        function shareViaEmail(title, text, url) {
+            const subject = encodeURIComponent(`Check out: ${decodeURIComponent(title)}`);
+            const body = encodeURIComponent(`${decodeURIComponent(text)}\n\n${decodeURIComponent(url)}`);
+            const emailUrl = `mailto:?subject=${subject}&body=${body}`;
+            window.location.href = emailUrl;
+        }
+        
+        function copyToClipboard(text, button) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(decodeURIComponent(text)).then(() => {
+                    const originalText = button.innerHTML;
+                    button.innerHTML = '<i class="fas fa-check" style="margin-right: 8px;"></i>Copied!';
+                    button.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.style.background = 'linear-gradient(135deg, #28a745, #20c997)';
+                    }, 2000);
+                }).catch(() => {
+                    fallbackCopyToClipboard(text, button);
+                });
+            } else {
+                fallbackCopyToClipboard(text, button);
+            }
+        }
+        
+        function fallbackCopyToClipboard(text, button) {
+            const textArea = document.createElement('textarea');
+            textArea.value = decodeURIComponent(text);
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-check" style="margin-right: 8px;"></i>Copied!';
+                setTimeout(() => button.innerHTML = originalText, 2000);
+            } catch (err) {
+                button.innerHTML = '<i class="fas fa-exclamation" style="margin-right: 8px;"></i>Copy failed';
+                setTimeout(() => button.innerHTML = '<i class="fas fa-copy" style="margin-right: 8px;"></i>Copy Link', 2000);
+            } finally {
+                document.body.removeChild(textArea);
+            }
+        }
+        
+        // Quick share functions for direct platform sharing
+        function quickShareWhatsApp(title, url) {
+            const text = encodeURIComponent(`Check out this recommendation: ${title}`);
+            const whatsappUrl = `https://wa.me/?text=${text}%20${encodeURIComponent(url)}`;
+            window.open(whatsappUrl, '_blank', 'width=600,height=400');
+        }
+        
+        function quickShareTwitter(title, url) {
+            const text = encodeURIComponent(`Check out this recommendation: ${title}`);
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`;
+            window.open(twitterUrl, '_blank', 'width=600,height=400');
+        }
+        
+        function quickShareLinkedIn(title, url) {
+            const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`;
+            window.open(linkedinUrl, '_blank', 'width=600,height=400');
+        }
+        
+        // Share profile function with enhanced formatting
+        function shareProfile(profileName, profileUrl, description) {
+            const shareText = `Check out ${profileName}'s curated recommendations on CUR8tr!`;
+            const fullText = description ? `${shareText} "${description}"` : shareText;
+            
+            if (navigator.share && navigator.canShare && navigator.canShare({ url: profileUrl })) {
+                navigator.share({
+                    title: `${profileName} on CUR8tr`,
+                    text: fullText,
+                    url: profileUrl
+                }).catch(err => {
+                    console.log('Web Share failed, using fallback:', err);
+                    fallbackShare(`${profileName} on CUR8tr`, profileUrl, fullText);
+                });
+            } else {
+                fallbackShare(`${profileName} on CUR8tr`, profileUrl, fullText);
+            }
+        }
+
+        function fallbackCopyToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast('Link copied to clipboard!');
+            } catch (err) {
+                showToast('Please copy the link manually');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed; 
+                bottom: 20px; 
+                left: 50%; 
+                transform: translateX(-50%); 
+                background: #4CAF50; 
+                color: white; 
+                padding: 12px 24px; 
+                border-radius: 6px; 
+                z-index: 1001;
+                font-size: 14px;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+    </script>
+
+    {% block scripts %}{% endblock %}
+
+</html>

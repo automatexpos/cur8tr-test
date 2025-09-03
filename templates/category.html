@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block title %}{{ category.name }} - {{ profile.name }} - CUR8tr{% endblock %}
+
+{% block content %}
+<style>
+.window {
+    background: #FDF0F0;
+    border: 4px solid #000;
+    border-radius: 30px;
+    box-shadow: 9px 12px 0px #000;
+    margin: 40px auto 32px auto;
+    padding: 0;
+    max-width: 900px;
+}
+.window-header {
+    background: #FDF0F0;
+    border-bottom: 2px solid #000;
+    border-radius: 30px 30px 0 0;
+    padding: 18px 32px;
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #2C2C2E;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.window-controls {
+    display: flex;
+    gap: 6px;
+}
+.window-button {
+    width: 22px;
+    height: 22px;
+    background: #fff;
+    border: 2px solid #000;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    color: #222;
+    cursor: pointer;
+    line-height: 18px;
+}
+.window-content {
+    padding: 32px;
+}
+.category-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+.category-meta-count {
+    color: #666;
+    font-size: 15px;
+    font-weight: 600;
+}
+.category-meta-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.btn {
+    background: #B3E0DD;
+    border: 2px solid #000;
+    border-radius: 10px;
+    padding: 8px 18px;
+    font-weight: 700;
+    color: #222;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 13px;
+}
+.btn:hover {
+    background: #DCE45F;
+}
+.card {
+    background: #fff;
+    border: 2px solid #B3E0DD;
+    border-radius: 18px;
+    box-shadow: 2px 3px 0px #B3E0DD;
+    margin-bottom: 24px;
+    padding: 0;
+}
+.card-header {
+    background: #FDF0F0;
+    border-bottom: 1px solid #B3E0DD;
+    border-radius: 18px 18px 0 0;
+    padding: 16px 24px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2C2C2E;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.card-title-link {
+    color: #2C2C2E;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+.card-title-link:hover {
+    text-decoration: underline;
+}
+.card-body {
+    padding: 24px;
+}
+.image-container {
+    margin-bottom: 12px;
+}
+.rec-image {
+    width: 100%;
+    max-width: 220px;
+    height: 120px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 12px;
+    border: 2px solid #DCE45F;
+    box-shadow: 1px 2px 0px #DCE45F;
+}
+.rec-meta {
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: #444;
+    display: flex;
+    gap: 16px;
+}
+.pro-tip {
+    background: #FFF3CD;
+    border-left: 4px solid #FFD700;
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin: 10px 0;
+    font-size: 13px;
+    color: #856404;
+}
+.rec-actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.rec-footer {
+    margin-top: 18px;
+    font-size: 12px;
+    color: #888;
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+.rec-url {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #2C2C2E;
+    word-break: break-all;
+}
+.card-text {
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #222;
+}
+</style>
+
+<div class="window-content">
+    <!-- Category Title & Description -->
+    <h2 style="font-size:1.6rem; font-weight:800; margin-bottom:10px; color:#2C2C2E;">
+        {{ category.name }}
+    </h2>
+    {% if category.description %}
+        <p style="font-size:16px; color:#444; margin-bottom:18px;">{{ category.description }}</p>
+    {% endif %}
+
+    <!-- Card Body: Recommendations -->
+    <div>
+        {% if recommendations %}
+            {% for rec in recommendations %}
+                <div class="card">
+                    <div class="card-header">
+                        <span>
+                            <i class="icon icon-star"></i> 
+                            <a href="{{ url_for('view_recommendation', profile_slug=profile.slug, category_slug=category.slug, rec_id=rec.id) }}" class="card-title-link">
+                                {{ rec.title }}
+                            </a>
+                        </span>
+                        <span style="display: flex; gap: 4px; align-items: center;">
+                            <button onclick="shareRecommendation('{{ rec.title }}', '{{ url_for('view_recommendation', profile_slug=profile.slug, category_slug=category.slug, rec_id=rec.id, _external=True) }}')" 
+                                    class="btn btn-small">
+                                <i class="fas fa-share"></i> Share Recommendation
+                            </button>
+                            {% if rec.url %}
+                                <a href="{{ rec.url }}" target="_blank" rel="noopener" class="btn btn-small">
+                                    <i class="icon icon-link"></i> Visit
+                                </a>
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        {% if rec.image %}
+                            <div class="image-container">
+                                <div class="rec-image" style="background-image: url('{{ rec.image }}');"></div>
+                            </div>
+                        {% endif %}
+                        <div>
+                            {% if rec.rating or rec.cost_rating %}
+                                <div class="rec-meta">
+                                    {% if rec.rating %}
+                                        <span class="rec-rating">Rating: {{ rec.rating }}/5</span>
+                                    {% endif %}
+                                    {% if rec.cost_rating %}
+                                        <span class="rec-cost">Cost: {{ rec.cost_rating }}</span>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                            {% if rec.description %}
+                                <p class="card-text">{{ rec.description }}</p>
+                            {% endif %}
+                            {% if rec.pro_tip %}
+                                <div class="pro-tip">
+                                    <span>💡 Pro Tip:</span>
+                                    <p>{{ rec.pro_tip }}</p>
+                                </div>
+                            {% endif %}
+                            <div class="rec-actions">
+                                <a href="{{ url_for('view_recommendation', profile_slug=profile.slug, category_slug=category.slug, rec_id=rec.id) }}" class="btn btn-small">
+                                    <i class="fas fa-info-circle"></i> Full Details
+                                </a>
+                                {% if rec.url %}
+                                    <a href="{{ rec.url }}" target="_blank" rel="noopener" class="btn btn-small">
+                                        <i class="icon icon-link"></i> Visit Link
+                                    </a>
+                                {% endif %}
+                                {% if current_user and profile.user_id == current_user.id %}
+                                    <a href="{{ url_for('edit_recommendation', rec_id=rec.id) }}" class="btn btn-small btn-edit">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <form method="POST" action="{{ url_for('delete_recommendation', rec_id=rec.id) }}" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete \'{{ rec.title }}\'? This action cannot be undone.')">
+                                        <button type="submit" class="btn btn-small btn-delete">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                {% endif %}
+                                <button onclick="shareRecommendation('{{ rec.title }}', '{{ url_for('view_recommendation', profile_slug=profile.slug, category_slug=category.slug, rec_id=rec.id, _external=True) }}')" class="btn btn-small btn-share">
+                                    <i class="fas fa-share"></i> Share
+                                </button>
+                            </div>
+                            {% if rec.url %}
+                                <div class="rec-url">{{ rec.url }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="rec-footer">
+                            <span><i class="fas fa-calendar"></i> Added {{ rec.created_at.strftime('%B %d, %Y') }}</span>
+                            <span><i class="fas fa-heart"></i> {{ rec.get_like_count() }}</span>
+                            <span><i class="fas fa-comments"></i> {{ rec.comments|length }}</span>
+                            {% if rec.location %}
+                                <span><i class="fas fa-map-marker-alt"></i> {{ rec.location[:20] }}{% if rec.location|length > 20 %}...{% endif %}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div style="text-align: center; padding: 40px;">
+                <p>This category doesn't have any recommendations yet.</p>
+                <a href="{{ url_for('view_profile', slug=profile.slug) }}" class="btn">
+                    <i class="fas fa-arrow-left"></i> Back to Profile
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Category Meta Row at the bottom -->
+    <div class="category-meta-row">
+        <span class="category-meta-count">
+            {{ recommendations|length }} recommendation{{ 's' if recommendations|length != 1 else '' }}
+        </span>
+        <div class="category-meta-actions">
+            <button onclick="shareRecommendation('{{ category.name }} recommendations by {{ profile.name }}', '{{ url_for('view_category', profile_slug=profile.slug, category_slug=category.slug, _external=True) }}')" 
+                    class="btn">
+                <i class="fas fa-share"></i> Share Category
+            </button>
+            <a href="{{ url_for('view_profile', slug=profile.slug) }}" class="btn">
+                <i class="fas fa-arrow-left"></i> Back to Profile
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

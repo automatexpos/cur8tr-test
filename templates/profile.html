@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block title %}{{ profile.name }} - CUR8tr{% endblock %}
+
+{% block content %}
+<!-- Frame 8 Container -->
+<div class="frame8-profile-container">
+
+    <!-- Frame 29 Profile Header -->
+    <div class="frame29-profile-header">
+        <div class="frame29-profile-image-wrap">
+            {% if profile.profile_image %}
+                <img src="{{ profile.profile_image }}" 
+                    alt="{{ profile.name }}" 
+                    class="frame29-profile-image">
+            {% else %}
+                <div class="frame29-profile-avatar">
+                    {{ profile.name[0] }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="frame29-profile-info">
+            <h1 class="frame29-profile-name">{{ profile.name }}</h1>
+            <div class="frame29-profile-member">
+                <i class="fas fa-calendar"></i> Member since {{ profile.created_at.strftime('%B %Y') }}
+            </div>
+        </div>
+        <div class="frame29-profile-share">
+            <button onclick="shareProfile('{{ profile.name }}', '{{ url_for('view_profile', slug=profile.slug, _external=True) }}', '{{ profile.bio[:100] if profile.bio else '' }}')" 
+                    class="frame29-btn-share">
+                <img src="{{ url_for('static', filename='svg/arrow_right.svg') }}" alt="Share" class="frame29-share-svg">
+                Share Profile
+            </button>
+        </div>
+        {% if session.user_id and session.user_id != profile.user_id %}
+            <div class="frame29-profile-follow">
+                {% set current_user = get_current_user() %}
+                {% if current_user and current_user.is_following(profile.user) %}
+                    <form method="POST" action="{{ url_for('unfollow_user', user_id=profile.user_id) }}">
+                        <button type="submit" class="frame29-btn-unfollow">
+                            <i class="fas fa-user-minus"></i> Unfollow
+                        </button>
+                    </form>
+                {% else %}
+                    <form method="POST" action="{{ url_for('follow_user', user_id=profile.user_id) }}">
+                        <button type="submit" class="frame29-btn-follow">
+                            <i class="fas fa-user-plus"></i> Follow
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Frame 47 Remaining Content -->
+    {% set svg_map = {
+    'Apps': 'apps.svg',
+    'Books': 'books.svg',
+    'Food': 'food.svg',
+    'Products': 'products.svg',
+    'Where To Stay': 'stay.svg',
+    'YouTube Channels': 'youtube.svg'
+} %}
+<div class="frame47-profile-content">
+    {% if categories %}
+        <div class="frame39-profile-categories-row">
+            {% for category in categories %}
+                <div class="frame33-profile-category-card">
+                    <div class="frame33-profile-category-title">
+                        <img src="{{ url_for('static', filename='svg/' ~ svg_map.get(category.name, 'default.svg')) }}" alt="{{ category.name }} icon" class="frame33-category-svg">
+                        {{ category.name }}
+                    </div>
+                    {% if category.description %}
+                        <div class="frame33-profile-category-desc">{{ category.description }}</div>
+                    {% endif %}
+                    {% set recent_recs = category.recommendations[:3] %}
+                    {% if recent_recs %}
+                        <div>
+                            {% for rec in recent_recs %}
+                                <div class="frame47-profile-recommendation-item">
+                                    {% if rec.image %}
+                                        <!-- <img src="{{ rec.image }}" alt="{{ rec.title }}" class="frame47-profile-recommendation-image"> -->
+                                    {% endif %}
+                                    <div class="frame47-profile-recommendation-content">
+                                        <a href="{{ url_for('view_recommendation', profile_slug=profile.slug, category_slug=category.slug, rec_id=rec.id) }}" class="frame47-profile-recommendation-title">
+                                            {{ rec.title }}
+                                        </a>
+                                        <div class="frame47-profile-recommendation-meta">
+                                            {% if rec.rating %}
+                                                <span>
+                                                    {% for i in range(rec.rating) %}
+                                                        <img src="{{ url_for('static', filename='svg/star.svg') }}" alt="Star" class="rec-star-svg">
+                                                    {% endfor %}
+                                                    {% for i in range(5 - rec.rating) %}
+                                                        <img src="{{ url_for('static', filename='svg/star_empty.svg') }}" alt="Star" class="rec-star-svg">
+                                                    {% endfor %}
+                                                    <span class="frame47-profile-recommendation-rating-value">({{ rec.rating }}/5)</span>
+                                                </span>
+                                            {% endif %}
+                                            {% if rec.cost_rating %}
+                                                <span class="frame47-profile-recommendation-cost">{{ rec.cost_rating }}</span>
+                                            {% endif %}
+                                        </div>
+                                        {% if rec.description %}
+                                            <div class="frame47-profile-recommendation-desc">{{ rec.description[:80] }}{% if rec.description|length > 80 %}...{% endif %}</div>
+                                        {% endif %}
+                                        <div class="frame33-profile-category-actions">
+                                            <a href="{{ url_for('view_recommendation', profile_slug=profile.slug, category_slug=category.slug, rec_id=rec.id) }}" class="frame33-profile-category-action-btn">
+                                                <i class="fas fa-info-circle"></i> Details
+                                            </a>
+                                            {% if rec.url %}
+                                                <a href="{{ rec.url }}" target="_blank" rel="noopener" class="frame33-profile-category-action-btn">
+                                                    <i class="fas fa-external-link-alt"></i> Visit
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if category.recommendations|length > 3 %}
+                            <div>
+                                <a href="{{ url_for('view_category', profile_slug=profile.slug, category_slug=category.slug) }}" class="frame33-profile-category-action-btn">
+                                    +{{ category.recommendations|length - 3 }} more
+                                </a>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="frame33-profile-category-desc" style="font-style: italic;">No recommendations yet.</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        </div>    
+    {% else %}
+        <div class="frame47-profile-section">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">
+                <i class="fas fa-folder-open"></i>
+            </div>
+            <h2 class="frame47-profile-section-title">No Categories Yet</h2>
+            <div class="frame47-profile-section-content">
+                This profile doesn't have any recommendation categories yet.<br>
+                <span style="opacity: 0.7;">Check back later for curated recommendations!</span>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+    <!-- Frame 48 Share Section -->
+    <div class="frame48-share-profile">
+        <div class="frame48-share-header">
+            <span class="frame48-share-title">
+                Share this profile with others
+            </span>
+        </div>
+        <div class="frame48-share-content">
+            <div class="frame48-share-link-row">
+                <input type="text" class="frame48-share-link" value="{{ url_for('view_profile', slug=profile.slug, _external=True) }}" readonly onclick="this.select()">
+                <button class="frame48-btn-copy" onclick="copyToClipboard(this)">
+                    <img src="{{ url_for('static', filename='svg/copy-alt.svg') }}" alt="Copy" class="frame48-copy-svg">
+                    Copy Link
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyToClipboard(btn) {
+    const input = btn.parentElement.querySelector('.frame48-share-link');
+    input.select();
+    document.execCommand('copy');
+    btn.classList.add('copied');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<img src="{{ url_for('static', filename='svg/copy-check.svg') }}" alt="Copied" class="frame48-copy-svg"> Copied!';
+    setTimeout(() => {
+        btn.innerHTML = originalText;
+        btn.classList.remove('copied');
+    }, 2000);
+}
+</script>
+{% endblock %}

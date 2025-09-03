@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - CUR8tr{% endblock %}
+
+{% block content %}
+<div class="window" style="margin-top: 20px;">
+    <div class="window-header">
+        <span><i class="fas fa-crown"></i> Admin Dashboard</span>
+        <div class="window-controls">
+            <div class="window-button">_</div>
+            <div class="window-button">□</div>
+            <div class="window-button">×</div>
+        </div>
+    </div>
+    <div class="window-content">
+        <!-- Stats -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+            <div class="card">
+                <div class="card-content" style="text-align: center;">
+                    <h3 style="margin: 0; color: var(--primary-cyan);">{{ user_count }}</h3>
+                    <p style="margin: 0; font-size: 11px; color: var(--text-secondary);">Total Users</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-content" style="text-align: center;">
+                    <h3 style="margin: 0; color: var(--primary-green);">{{ profile_count }}</h3>
+                    <p style="margin: 0; font-size: 11px; color: var(--text-secondary);">Public Profiles</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Users -->
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-users"></i> Recent Users</h3>
+            </div>
+            <div class="card-content">
+                {% if recent_users %}
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; font-size: 11px;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid var(--border-color);">
+                                    <th style="text-align: left; padding: 8px;">Username</th>
+                                    <th style="text-align: left; padding: 8px;">Email</th>
+                                    <th style="text-align: left; padding: 8px;">Verified</th>
+                                    <th style="text-align: left; padding: 8px;">Joined</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in recent_users %}
+                                <tr style="border-bottom: 1px solid var(--bg-tertiary);">
+                                    <td style="padding: 8px;">{{ user.username }}</td>
+                                    <td style="padding: 8px;">{{ user.email }}</td>
+                                    <td style="padding: 8px;">
+                                        {% if user.is_verified %}
+                                            <span style="color: var(--primary-green);">✓</span>
+                                        {% else %}
+                                            <span style="color: var(--primary-red);">✗</span>
+                                        {% endif %}
+                                    </td>
+                                    <td style="padding: 8px;">{{ user.created_at.strftime('%Y-%m-%d') if user.created_at else 'N/A' }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p style="color: var(--text-secondary); font-style: italic;">No users found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - CUR8tr{% endblock %}
+
+{% block content %}
+<h1 class="dashboard-title">Dashboard</h1>
+    
+    <!-- Import and render personalized welcome message -->
+    {% from 'components/welcome_message.html' import render_personalized_welcome %}
+    {{ render_personalized_welcome(welcome_message) }}
+        
+    <!-- Enhanced Stats with Personalized Data -->
+    {% from 'components/welcome_message.html' import render_dashboard_stats %}
+    {{ render_dashboard_stats(dashboard_stats) }}
+</div>
+
+<!-- Manage Your Content Section -->
+<section class="manage-content-figma">
+  <h2 class="manage-content-title">Manage Your Content</h2>
+  <div class="manage-content-row">
+    <!-- Profile Settings Card -->
+    <a href="{{ url_for('dashboard_profile') }}" class="manage-content-card">
+      <div class="manage-content-card-icon">
+        <img src="{{ url_for('static', filename='svg/profilesetting.svg') }}" alt="Profile" width="38" height="38">
+      </div>
+      <div class="manage-content-card-info">
+        <div class="manage-content-card-title">Profile Settings</div>
+        <div class="manage-content-card-desc">Manage your profile information and settings</div>
+      </div>
+    </a>
+    <!-- Categories Card -->
+    <a href="{{ url_for('dashboard_categories') }}" class="manage-content-card">
+      <div class="manage-content-card-icon">
+        <img src="{{ url_for('static', filename='svg/categories_dashboard.svg') }}" alt="Categories" width="38" height="38">
+      </div>
+      <div class="manage-content-card-info">
+        <div class="manage-content-card-title">Categories</div>
+        <div class="manage-content-card-desc">Organize your recommendations into categories</div>
+      </div>
+    </a>
+    <!-- Recommendations Card -->
+    <a href="{{ url_for('dashboard_recommendations') }}" class="manage-content-card">
+      <div class="manage-content-card-icon">
+        <img src="{{ url_for('static', filename='svg/recommendations_dashboard.svg') }}" alt="Recommendations" width="38" height="38">
+      </div>
+      <div class="manage-content-card-info">
+        <div class="manage-content-card-title">Recommendations</div>
+        <div class="manage-content-card-desc">Add and manage your recommendations</div>
+      </div>
+    </a>
+  </div>
+</section>
+        
+<!-- Quick Actions and Recent Recommendations -->
+<section class="quick-actions-figma">
+<h2 class="quick-actions-title">Quick Actions</h2>
+
+  <div class="quick-actions-row">
+    <!-- Add Category Card -->
+    <a href="#" class="quick-action-card" id="quick-add-category">
+      <div class="quick-action-card-icon">
+        <img src="{{ url_for('static', filename='svg/plus-circle.svg') }}" alt="Add Category" width="38" height="38">
+      </div>
+      <div class="quick-action-card-info">
+        <div class="quick-action-card-title">Add Category</div>
+      </div>
+    </a>
+    <!-- Add Recommendation Card -->
+    <a href="{{ url_for('new_recommendation') }}" class="quick-action-card">
+      <div class="quick-action-card-icon">
+        <img src="{{ url_for('static', filename='svg/star.svg') }}" alt="Add Recommendation" width="38" height="38">
+      </div>
+      <div class="quick-action-card-info">
+        <div class="quick-action-card-title">Add Recommendation</div>
+      </div>
+    </a>
+    <!-- View Profile Card -->
+    <a href="{{ url_for('view_profile', slug=profile.slug) }}" class="quick-action-card">
+      <div class="quick-action-card-icon">
+        <img src="{{ url_for('static', filename='svg/eye.svg') }}" alt="View Profile" width="38" height="38">
+      </div>
+      <div class="quick-action-card-info">
+        <div class="quick-action-card-title">View Profile</div>
+      </div>
+    </a>
+    <!-- Share Profile Card -->
+    <a href="{{ url_for('dashboard_share') }}" class="quick-action-card">
+      <div class="quick-action-card-icon">
+        <img src="{{ url_for('static', filename='svg/arrow_right.svg') }}" alt="Share Profile" width="38" height="38">
+      </div>
+      <div class="quick-action-card-info">
+        <div class="quick-action-card-title">Share Profile</div>
+      </div>
+    </a>
+  </div>
+</section>
+    
+    <!-- Recent Recommendations -->
+{% set category_svg_map = {
+    'Apps': 'apps.svg',
+    'Products': 'products.svg',
+    'YouTube Channels': 'youtube.svg',
+    'Food': 'food.svg',
+    'Books': 'books.svg',
+    'Where To Stay': 'stay.svg',
+    'Festivals': 'festivals.svg'
+} %}     
+
+<div class="recent-recommendations-section-bg">
+  <h2 class="recent-recommendations-title">Recent Recommendations</h2>
+    <div class="recent-recommendations-grid">
+      {% for rec in recent_recs %}
+        <div class="recent-recommendation-card">
+          <!-- Top Row: Category name (left), Rating (right) -->
+          <div class="recent-recommendation-top-row">
+            <span class="recent-recommendation-category">
+              <img src="{{ url_for('static', filename='svg/' ~ category_svg_map.get(rec.category.name, 'category.svg')) }}" alt="{{ rec.category.name }}" class="recent-recommendation-category-svg">
+              {{ rec.category.name }}
+            </span>
+            <span class="recent-recommendation-rating">
+              {% for i in range(rec.rating) %}
+                <img src="{{ url_for('static', filename='svg/like.svg') }}" alt="Rating" class="recent-recommendation-rating-svg">
+              {% endfor %}
+            </span>
+          </div>
+          <!-- Second Row: Title (left), Cost (right) -->
+          <div class="recent-recommendation-title-row">
+            <span class="recent-recommendation-title">{{ rec.title }}</span>
+            <span class="recent-recommendation-cost">
+              {% set cost_map = {'$': 1, '$$': 2, '$$$': 3, '$$$$': 4} %}
+              {% for i in range(cost_map.get(rec.cost_rating, 1)) %}
+                <img src="{{ url_for('static', filename='svg/dollar-circle.svg') }}" alt="Cost" class="recent-recommendation-cost-svg">
+              {% endfor %}
+              {{ rec.cost_label }}
+            </span>
+          </div>
+          <div class="recent-recommendation-tags">
+            {% for tag in rec.tags.get('categories', []) %}
+              <span class="recent-recommendation-tag-category">{{ tag }}</span>
+            {% endfor %}
+            {% for tag in rec.tags.get('collections', []) %}
+              <span class="recent-recommendation-tag-collection">{{ tag }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+      </div>
+      <a href="{{ url_for('dashboard_recommendations') }}" class="recent-recommendations-btn">
+        View All Recommendations
+        <img src="{{ url_for('static', filename='svg/arrow-right-simple.svg') }}" alt="Arrow" class="recent-recommendations-btn-svg">
+      </a>
+    </div>
+
+    <!-- Category Modal -->
+<div id="category-modal-overlay" style="display:none;"></div>
+<div id="category-modal" style="display:none;">
+  <div id="category-modal-loader" class="loader"></div>
+  <div id="category-modal-content" style="display:none;"></div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Open modal and fetch form via AJAX
+  document.getElementById('quick-add-category').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('category-modal-overlay').style.display = 'block';
+    document.getElementById('category-modal').style.display = 'block';
+    document.getElementById('category-modal-loader').style.display = 'block';
+    document.getElementById('category-modal-content').style.display = 'none';
+    document.body.classList.add('modal-open');
+    // Fetch form HTML
+    fetch('/dashboard/categories/form')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('category-modal-loader').style.display = 'none';
+        document.getElementById('category-modal-content').innerHTML = html;
+        document.getElementById('category-modal-content').style.display = 'block';
+      });
+  });
+
+  // Close modal when overlay is clicked
+  document.getElementById('category-modal-overlay').addEventListener('click', function() {
+    document.getElementById('category-modal-overlay').style.display = 'none';
+    document.getElementById('category-modal').style.display = 'none';
+    document.body.classList.remove('modal-open');
+  });
+});
+</script>
+{% endblock %}
+

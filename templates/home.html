@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block title %}CUR8tr - Share Your Recommendations{% endblock %}
+{% block content %}
+<link href="{{ url_for('static', filename='css/layout.css') }}" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@700&family=Anton&family=Fredoka+One&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<!-- === HERO === -->
+<section class="hero-figma">
+  <div class="hero-content">
+  <h1>
+    CREATE & SHARE YOUR<br>CURATED RECOMMENDATIONS
+  </h1>
+    <p>
+      Build beautiful profiles of your favorite things. Organize recommendations into categories and share them with the world via custom URLs and QR codes.
+    </p>
+    <div class="hero-actions">
+      {% if not session.user_id %}
+      <a href="{{ url_for('login') }}" class="hero-btn hero-login">
+        <img src="{{ url_for('static', filename='svg/login.svg') }}" alt="Login" width="28" height="28">
+        <span>Login</span>
+      </a>
+      <a href="{{ url_for('register') }}" class="hero-btn hero-register">
+        <img src="{{ url_for('static', filename='svg/getstarted.svg') }}" alt="Get Started" width="28" height="28">
+        <span>Get Started</span>
+      </a>
+      {% else %}
+      <a href="{{ url_for('dashboard') }}" class="hero-btn hero-register">
+        <span>Go to Dashboard</span>
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- === RECENT RECOMMENDATIONS === -->
+ {% set category_svg_map = {
+    'Apps': 'apps.svg',
+    'Products': 'products.svg',
+    'YouTube Channels': 'youtube.svg',
+    'Food': 'food.svg',
+    'Books': 'books.svg',
+    'Where To Stay': 'stay.svg',
+    'Festivals': 'festivals.svg'
+} %}
+{% if recent_recommendations %}
+<h2 class="recent-recs-title">RECENT RECOMMENDATIONS</h2>
+<div class="recent-recs-row">
+  {% for rec in recent_recommendations[:4] %}
+    <div class="rec-card">
+      <div class="rec-image-wrap">
+        <img src="{{ rec.image | safe_image(rec.title, 200, 120) }}" alt="{{ rec.title }}">
+        <div class="rec-stars">
+          {% for i in range(rec.rating or 0) %}
+            <img src="{{ url_for('static', filename='svg/star.svg') }}" alt="Star" class="rec-star-svg">
+          {% endfor %}
+          {% for i in range(5 - (rec.rating or 0)) %}
+            <img src="{{ url_for('static', filename='svg/star_empty.svg') }}" alt="Star" class="rec-star-svg">
+          {% endfor %}
+        </div>
+      </div>
+      <div class="rec-card-bottom">
+        <div class="rec-info">
+          <div class="rec-title">{{ rec.title }}</div>
+          <div class="rec-meta">
+            <img src="{{ url_for('static', filename='svg/' ~ category_svg_map.get(rec.category.name, 'default.svg')) }}" width="22" height="22" alt="{{ rec.category.name }}">
+            <span>{{ rec.category.name }}</span>
+            <span class="dot"></span>
+            <span class="rec-meta-author">by {{ rec.category.profile.name }}</span>
+          </div>
+        </div>
+        <a href="{{ url_for('view_recommendation', profile_slug=rec.category.profile.slug, category_slug=rec.category.slug, rec_id=rec.id) }}" class="rec-share">
+          <img src="{{ url_for('static', filename='svg/arrow_right.svg') }}" alt="Go" width="28" height="28">
+        </a>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- === POPULAR PRO TIPS === -->
+{% if popular_pro_tips %}
+<section class="popular-pro-tips-section">
+  <h2 class="section-title popular-pro-tips-title">
+    POPULAR PRO TIPS
+  </h2>
+  <div class="popular-pro-tips-grid">
+    {% for tip in popular_pro_tips %}
+      <a href="{{ url_for('view_recommendation', profile_slug=tip.category.profile.slug, category_slug=tip.category.slug, rec_id=tip.id) }}"
+         class="pro-tip-card">
+        <div class="pro-tip-image-wrap">
+          <img src="{{ tip.image | safe_image(tip.title, 400, 225) }}" alt="{{ tip.title }}">
+        </div>
+        <h4 class="pro-tip-title">{{ tip.title }}</h4>
+        <div class="pro-tip-meta-row">
+          <span class="pro-tip-meta-icon">
+            {% if tip.category.name == "Apps" %}
+              <img src="{{ url_for('static', filename='svg/apps.svg') }}" alt="Apps" width="20" height="20">
+            {% elif tip.category.name == "Products" %}
+              <img src="{{ url_for('static', filename='svg/products.svg') }}" alt="Products" width="20" height="20">
+            {% elif tip.category.name == "Youtube Channels" %}
+              <img src="{{ url_for('static', filename='svg/youtube.svg') }}" alt="Youtube" width="20" height="20">
+            {% elif tip.category.name == "Food" %}
+              <img src="{{ url_for('static', filename='svg/food.svg') }}" alt="Food" width="20" height="20">
+            {% elif tip.category.name == "Books" %}
+              <img src="{{ url_for('static', filename='svg/books.svg') }}" alt="Books" width="20" height="20">
+            {% elif tip.category.name == "Where To Stay" %}
+              <img src="{{ url_for('static', filename='svg/stay.svg') }}" alt="Where To Stay" width="20" height="20">
+            {% elif tip.category.name == "Festivals" %}
+              <img src="{{ url_for('static', filename='svg/festivals.svg') }}" alt="Festivals" width="20" height="20">
+            {% else %}
+              <img src="{{ url_for('static', filename='svg/default.svg') }}" alt="Category" width="20" height="20">
+            {% endif %}
+          </span>
+          <span class="pro-tip-meta-text">
+            {{ tip.category.name }} • by {{ tip.category.profile.name }}
+          </span>
+          <span class="pro-tip-arrow">
+            <img src="{{ url_for('static', filename='svg/arrow_right.svg') }}" alt="Go" width="20" height="20">
+          </span>
+        </div>
+        <div class="pro-tip-desc-row">
+          <img src="{{ url_for('static', filename='svg/bulb.svg') }}" alt="Tip" class="pro-tip-desc-bulb">
+          <span class="pro-tip-desc-text">
+            {{ tip.pro_tip[:120] }}{% if tip.pro_tip|length > 120 %}...{% endif %}
+          </span>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- === FEATURES === -->
+<h2 class="section-title features-title">OUR FEATURES</h2>
+<section class="features-row">
+  <div class="feature-card">
+    <div class="feature-icon">
+      <img src="{{ url_for('static', filename='svg/arrow_right.svg') }}" alt="Rec List" width="28" height="28">
+    </div>
+    <div class="feature-title">Rec List</div>
+    <div class="feature-desc">Curate all your recommendations on your profile and share with friends and followers.</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">
+      <img src="{{ url_for('static', filename='svg/settings.svg') }}" alt="Customize" width="28" height="28">
+    </div>
+    <div class="feature-title">Customize</div>
+    <div class="feature-desc">You can create custom categories or use our pre-built categories. Have a favorite hiking trail, fly fishing spot or your top 3 pizza spots in the world? Curate those lists here!</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">
+      <img src="{{ url_for('static', filename='svg/follow_users.svg') }}" alt="Follow Other CUR8trs" width="28" height="28">
+    </div>
+    <div class="feature-title">Follow Other CUR8trs</div>
+    <div class="feature-desc">See recommendations that you like? Follow that CUR8tr.</div>
+  </div>
+  <div class="feature-card">
+    <div class="feature-icon">
+      <img src="{{ url_for('static', filename='svg/qr.svg') }}" alt="QR Codes" width="28" height="28">
+    </div>
+    <div class="feature-title">QR Codes</div>
+    <div class="feature-desc">Generate QR codes for easy sharing in person or on printed materials.</div>
+  </div>
+</section>
+<br>
+<!-- === RECENT PROFILES === -->
+{% if profiles %}
+<section class="recent-public-profiles-section">
+  <h2 class="section-title features-public-profiles-title">RECENT PUBLIC PROFILES</h2>
+  <div class="recent-public-profiles-grid">
+    {% for profile in profiles %}
+      <article class="public-profile-card">
+        <div class="public-profile-top">
+          <div class="public-profile-image">
+            {% if profile.profile_image %}
+              <img src="{{ profile.profile_image }}" alt="{{ profile.name }}">
+            {% else %}
+              <span>{{ profile.name[0] }}</span>
+            {% endif %}
+          </div>
+          <div class="public-profile-info">
+            <div class="public-profile-name">{{ profile.name }}</div>
+            <div class="public-profile-date">
+              <img src="{{ url_for('static', filename='svg/calendar.svg') }}" alt="Calendar" width="20" height="20">
+              <span>Created {{ profile.created_at.strftime('%B %d, %Y') }}</span>
+            </div>
+          </div>
+        </div>
+        {% if profile.bio %}
+          <div class="public-profile-bio">
+            {{ profile.bio[:80] }}{% if profile.bio|length > 80 %}...{% endif %}
+          </div>
+        {% endif %}
+        <a href="{{ url_for('view_profile', slug=profile.slug) }}" class="public-profile-btn">
+          <img src="{{ url_for('static', filename='svg/eye.svg') }}" alt="View Profile" width="28" height="28">
+          <span>View Profile</span>
+        </a>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}
+</div>
+</body>

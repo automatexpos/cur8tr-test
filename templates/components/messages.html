@@ -1,0 +1,137 @@
+<!-- Elegant Message System Component -->
+<!-- Include this in base.html or specific templates for beautiful user feedback -->
+
+<!-- Fixed Position Message Container (for toast-style notifications) -->
+<div class="message-container" id="message-container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }}" data-message-id="{{ loop.index }}">
+                    <div class="message-icon">
+                        {% if category == 'success' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% elif category == 'error' %}
+                            <i class="fas fa-exclamation-triangle"></i>
+                        {% elif category == 'warning' %}
+                            <i class="fas fa-exclamation-circle"></i>
+                        {% else %}
+                            <i class="fas fa-info-circle"></i>
+                        {% endif %}
+                    </div>
+                    <div class="message-text">{{ message }}</div>
+                    <button class="message-close" onclick="closeMessage({{ loop.index }})" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
+<!-- Inline Messages Macro for Forms -->
+{% macro render_inline_messages() %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message flash-{{ category }} flash-inline">
+                    <div class="message-icon">
+                        {% if category == 'success' %}
+                            <i class="fas fa-check-circle"></i>
+                        {% elif category == 'error' %}
+                            <i class="fas fa-exclamation-triangle"></i>
+                        {% elif category == 'warning' %}
+                            <i class="fas fa-exclamation-circle"></i>
+                        {% else %}
+                            <i class="fas fa-info-circle"></i>
+                        {% endif %}
+                    </div>
+                    <div class="message-text">{{ message }}</div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+{% endmacro %}
+
+<!-- JavaScript for Interactive Messages -->
+<script>
+// Enhanced message system with auto-dismiss and smooth animations
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-dismiss success and info messages after 5 seconds
+    document.querySelectorAll('.flash-success, .flash-info').forEach(function(message) {
+        const messageId = message.getAttribute('data-message-id');
+        setTimeout(function() {
+            closeMessage(messageId);
+        }, 5000);
+    });
+    
+    // Auto-dismiss warnings after 7 seconds
+    document.querySelectorAll('.flash-warning').forEach(function(message) {
+        const messageId = message.getAttribute('data-message-id');
+        setTimeout(function() {
+            closeMessage(messageId);
+        }, 7000);
+    });
+    
+    // Error messages stay visible until manually closed
+});
+
+function closeMessage(messageId) {
+    const message = document.querySelector(`[data-message-id="${messageId}"]`);
+    if (message) {
+        message.style.animation = 'slideOutRight 0.3s ease-in forwards';
+        setTimeout(function() {
+            message.remove();
+        }, 300);
+    }
+}
+
+// Function to dynamically add messages via JavaScript
+function addFlashMessage(text, type = 'info', autoDismiss = true) {
+    const container = document.getElementById('message-container');
+    const messageId = Date.now();
+    
+    const icons = {
+        success: 'fa-check-circle',
+        error: 'fa-exclamation-triangle', 
+        warning: 'fa-exclamation-circle',
+        info: 'fa-info-circle'
+    };
+    
+    const messageHTML = `
+        <div class="flash-message flash-${type}" data-message-id="${messageId}">
+            <div class="message-icon">
+                <i class="fas ${icons[type] || icons.info}"></i>
+            </div>
+            <div class="message-text">${text}</div>
+            <button class="message-close" onclick="closeMessage(${messageId})" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    
+    container.insertAdjacentHTML('beforeend', messageHTML);
+    
+    // Auto-dismiss based on message type
+    if (autoDismiss) {
+        const dismissTime = type === 'error' ? 10000 : (type === 'warning' ? 7000 : 5000);
+        setTimeout(() => closeMessage(messageId), dismissTime);
+    }
+}
+
+// Utility functions for common message operations
+function showSuccess(message) {
+    addFlashMessage(message, 'success');
+}
+
+function showError(message) {
+    addFlashMessage(message, 'error', false); // Errors don't auto-dismiss
+}
+
+function showWarning(message) {
+    addFlashMessage(message, 'warning');
+}
+
+function showInfo(message) {
+    addFlashMessage(message, 'info');
+}
+</script>

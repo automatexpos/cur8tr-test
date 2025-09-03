@@ -1,0 +1,14 @@
+Flask
+Flask-Login
+Flask-WTF
+Flask-SQLAlchemy
+itsdangerous
+Jinja2
+Werkzeug
+python-dotenv
+email-validator
+Flask-Migrate
+psycopg2-binary
+qrcode
+Pillow  # qrcode needs this for image generation
+supabase

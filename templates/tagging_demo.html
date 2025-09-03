@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+
+{% block title %}Tagging System Demo - CUR8tr{% endblock %}
+
+{% block head %}
+<style>
+    .tagging-demo {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .section {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .tag-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+    
+    .tag-button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.3s ease;
+    }
+    
+    .tag-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .tag-button.active {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    .category-tag {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+    
+    .collection-tag {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+    
+    .recommendation-card {
+        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+    }
+    
+    .recommendation-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+    
+    .recommendation-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #2d3748;
+    }
+    
+    .recommendation-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-top: 10px;
+    }
+    
+    .recommendation-tag {
+        background: rgba(255,255,255,0.8);
+        padding: 4px 8px;
+        border-radius: 10px;
+        font-size: 12px;
+        color: #4a5568;
+        font-weight: 500;
+    }
+    
+    .loading {
+        text-align: center;
+        padding: 40px;
+        color: #718096;
+    }
+    
+    .header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .header h1 {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+    
+    .tag-type-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .tag-type-badge {
+        padding: 4px 12px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .categories-badge {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+    }
+    
+    .collections-badge {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="tagging-demo">
+    <div class="header">
+        <h1>🏷️ Tagging System Demo</h1>
+        <p>Explore recommendations using our new flexible tagging system with categories and collections!</p>
+    </div>
+    
+    <div class="section">
+        <div class="tag-type-header">
+            <span class="tag-type-badge categories-badge">Categories</span>
+            <h3>Global Categories</h3>
+        </div>
+        <div id="category-tags" class="tag-filters">
+            <div class="loading">Loading categories...</div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="tag-type-header">
+            <span class="tag-type-badge collections-badge">Collections</span>
+            <h3>User Collections</h3>
+        </div>
+        <div id="collection-tags" class="tag-filters">
+            <div class="loading">Loading collections...</div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h3>Filtered Recommendations</h3>
+        <div id="active-filters" style="margin-bottom: 20px;"></div>
+        <div id="recommendations">
+            <div class="loading">Select tags above to see filtered recommendations...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+let selectedTags = [];
+let allCategories = [];
+let allCollections = [];
+
+// Load categories
+fetch('/api/tags/categories')
+    .then(response => response.json())
+    .then(data => {
+        allCategories = data.categories;
+        renderTags('category-tags', allCategories, 'category-tag');
+    })
+    .catch(error => {
+        document.getElementById('category-tags').innerHTML = '<p>Error loading categories</p>';
+        console.error('Error:', error);
+    });
+
+// Load collections
+fetch('/api/tags/collections')
+    .then(response => response.json())
+    .then(data => {
+        allCollections = data.collections;
+        renderTags('collection-tags', allCollections, 'collection-tag');
+    })
+    .catch(error => {
+        document.getElementById('collection-tags').innerHTML = '<p>No collections available - create some recommendations with tags!</p>';
+        console.error('Error:', error);
+    });
+
+function renderTags(containerId, tags, className) {
+    const container = document.getElementById(containerId);
+    if (tags.length === 0) {
+        container.innerHTML = '<p>No tags available</p>';
+        return;
+    }
+    
+    container.innerHTML = tags.map(tag => 
+        `<button class="tag-button ${className}" data-tag="${tag.id}" onclick="toggleTag('${tag.id}')">
+            ${tag.name}
+        </button>`
+    ).join('');
+}
+
+function toggleTag(tagId) {
+    const index = selectedTags.indexOf(tagId);
+    if (index > -1) {
+        selectedTags.splice(index, 1);
+    } else {
+        selectedTags.push(tagId);
+    }
+    
+    updateTagButtons();
+    updateActiveFilters();
+    loadRecommendations();
+}
+
+function updateTagButtons() {
+    document.querySelectorAll('.tag-button').forEach(button => {
+        const tagId = button.getAttribute('data-tag');
+        if (selectedTags.includes(tagId)) {
+            button.classList.add('active');
+        } else {
+            button.classList.remove('active');
+        }
+    });
+}
+
+function updateActiveFilters() {
+    const container = document.getElementById('active-filters');
+    if (selectedTags.length === 0) {
+        container.innerHTML = '<p><em>No filters active - showing all public recommendations</em></p>';
+        return;
+    }
+    
+    const filterHtml = selectedTags.map(tagId => {
+        const tag = [...allCategories, ...allCollections].find(t => t.id === tagId);
+        const className = allCategories.find(t => t.id === tagId) ? 'category-tag' : 'collection-tag';
+        return `<span class="tag-button ${className}">${tag ? tag.name : tagId}</span>`;
+    }).join(' ');
+    
+    container.innerHTML = `<strong>Active filters:</strong> ${filterHtml}`;
+}
+
+function loadRecommendations() {
+    const container = document.getElementById('recommendations');
+    container.innerHTML = '<div class="loading">Loading recommendations...</div>';
+    
+    const tagsParam = selectedTags.length > 0 ? `?tags=${selectedTags.join(',')}` : '';
+    
+    fetch(`/api/recommendations${tagsParam}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length === 0) {
+                container.innerHTML = '<p>No recommendations found with the selected tags.</p>';
+                return;
+            }
+            
+            container.innerHTML = data.map(rec => `
+                <div class="recommendation-card">
+                    <div class="recommendation-title">${rec.title}</div>
+                    <div>${rec.description || 'No description available'}</div>
+                    <div class="recommendation-tags">
+                        ${(rec.tags || []).map(tag => 
+                            `<span class="recommendation-tag">${tag.replace('-', ' ')}</span>`
+                        ).join('')}
+                    </div>
+                    <div style="margin-top: 10px; font-size: 14px; color: #718096;">
+                        From: ${rec.profile ? rec.profile.name : 'Unknown'} → ${rec.category ? rec.category.name : 'Unknown'}
+                    </div>
+                </div>
+            `).join('');
+        })
+        .catch(error => {
+            container.innerHTML = '<p>Error loading recommendations</p>';
+            console.error('Error:', error);
+        });
+}
+
+// Load initial recommendations
+updateActiveFilters();
+loadRecommendations();
+</script>
+{% endblock %}

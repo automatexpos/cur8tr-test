@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Register - CUR8tr{% endblock %}
+
+{% block content %}
+<div class="register-figma">
+  <div class="register-header">
+    <h1>Join CUR8tr</h1>
+    <div class="register-subtitle">Create your account to start curating recommendations</div>
+  </div>
+  {% if request.endpoint == 'verify_registration' %}
+    <!-- Verification Step -->
+    <form method="POST" class="register-fields">
+      <div class="register-row">
+        <label for="verification_code">
+          <i class="fas fa-key"></i> Enter 6-Digit Code
+        </label>
+        <input type="text" name="verification_code" class="register-input"
+               placeholder="000000" maxlength="6" pattern="[0-9]{6}">
+      </div>
+      <button type="submit" class="register-btn">
+        <i class="fas fa-check"></i> Verify & Complete Registration
+      </button>
+      <a href="{{ url_for('register') }}" class="register-login-btn">
+        <i class="fas fa-arrow-left"></i> Start Over
+      </a>
+    </form>
+  {% else %}
+    <!-- Registration Form -->
+    <form method="POST" action="{{ url_for('register') }}" novalidate class="register-fields">
+      {{ form.hidden_tag() }}
+      <div class="register-row">
+        <img src="{{ url_for('static', filename='svg/username_signup.svg') }}" alt="Username" class="register-icon">
+        {{ form.username(class="register-input", placeholder="Username", autocomplete="username") }}
+      </div>
+      <div class="register-row">
+        <img src="{{ url_for('static', filename='svg/email.svg') }}" alt="Email" class="register-icon">
+        {{ form.email(class="register-input", placeholder="Email", autocomplete="email") }}
+      </div>
+      <div class="register-row">
+        <img src="{{ url_for('static', filename='svg/password.svg') }}" alt="Password" class="register-icon">
+        {{ form.password(class="register-input", placeholder="Password", autocomplete="new-password") }}
+      </div>
+      <div class="register-row">
+        <img src="{{ url_for('static', filename='svg/password.svg') }}" alt="Confirm Password" class="register-icon">
+        {{ form.password_confirm(class="register-input", placeholder="Confirm Password", autocomplete="new-password") }}
+      </div>
+      <button type="submit" class="register-btn" id="submit-btn">
+        <img src="{{ url_for('static', filename='svg/getstarted.svg') }}" alt="Create Account" class="register-icon">
+        Create New Account
+      </button>
+    </form>
+    <div class="register-footer">
+      <div class="register-footer-line"></div>
+      <span class="register-footer-text">Already have an account?</span>
+      <div class="register-footer-line"></div>
+    </div>
+    <a href="{{ url_for('login') }}" class="register-login-btn">
+      <img src="{{ url_for('static', filename='svg/login.svg') }}" alt="Login" class="register-icon">
+      Login
+    </a>
+  {% endif %}
+</div>
+    </div>
+</div>
+
+<script>
+// Add debugging for form submission
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form[method="POST"]');
+    const submitBtn = document.getElementById('submit-btn');
+    
+    if (form && submitBtn) {
+        form.addEventListener('submit', function(e) {
+            console.log('Form submission started');
+            console.log('Form data:', new FormData(form));
+            
+            // Change button text to show it's submitting
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+            submitBtn.disabled = true;
+        });
+        
+        // Re-enable button if form validation fails
+        form.addEventListener('invalid', function(e) {
+            console.log('Form validation failed:', e);
+            submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+            submitBtn.disabled = false;
+        });
+    }
+});
+</script>
+
+<!-- Verification Template -->
+{% if request.endpoint == 'verify_registration' %}
+<script>
+// Auto-focus the verification code input
+document.addEventListener('DOMContentLoaded', function() {
+    const input = document.querySelector('input[name="verification_code"]');
+    if (input) {
+        input.focus();
+        
+        // Auto-submit when 6 digits are entered
+        input.addEventListener('input', function() {
+            if (this.value.length === 6) {
+                // Small delay to show the complete code
+                setTimeout(() => {
+                    this.closest('form').submit();
+                }, 500);
+            }
+        });
+    }
+});
+</script>
+{% endif %}
+{% endblock %}

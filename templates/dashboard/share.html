@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}Share Profile - Dashboard - CUR8tr{% endblock %}
+
+{% block content %}
+<div style="max-width: 700px; margin: 40px auto; background: #FDF0F0; border: 4px solid #000; box-shadow: 9px 12px 0px #000; border-radius: 30px; padding: 36px 32px;">
+    <div style="background: linear-gradient(135deg, #98FB98, #87CEEB); border-bottom: 2px solid #888; padding: 18px 24px; border-radius: 22px 22px 0 0;">
+        <span style="font-size: 24px; font-weight: bold; color: #333; text-shadow: 1px 1px 0 rgba(255,255,255,0.5); letter-spacing: 1px;">
+            <i class="icon icon-share"></i> Share Your Profile
+        </span>
+    </div>
+
+    <h2 style="font-size: 20px; margin: 32px 0 18px 0; font-weight: 800; color: #2C2C2E;">Share "{{ profile.name }}"</h2>
+
+    {% if profile.is_public %}
+        <!-- Profile URL -->
+        <div style="background: #fff; border: 2px solid #B3E0DD; border-radius: 18px; box-shadow: 2px 3px 0px #B3E0DD; margin-bottom: 24px; padding: 24px;">
+            <div style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">
+                <i class="icon icon-link"></i> Profile URL
+            </div>
+            <p style="margin-bottom: 8px; color: #222;">Share this link with anyone:</p>
+            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                <input type="text" id="profile-url" value="{{ profile_url }}" readonly 
+                       style="font-family: monospace; font-size: 13px; border: 2px solid #DCE45F; border-radius: 10px; padding: 8px 12px; flex: 1;">
+                <button onclick="copyUrl()" style="min-width: 80px; background: #DCE45F; border: 2px solid #000; border-radius: 10px; font-weight: 700; color: #222; cursor: pointer;">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <a href="{{ profile_url }}" target="_blank" style="background: #B3E0DD; border: 2px solid #000; border-radius: 10px; padding: 6px 18px; font-weight: 700; color: #222; text-decoration: none; display: inline-flex; align-items: center;">
+                    <i class="fas fa-eye"></i> Preview
+                </a>
+                <a href="mailto:?subject=Check out my recommendations&body=I thought you might like my curated recommendations: {{ profile_url }}" 
+                   style="background: #B3E0DD; border: 2px solid #000; border-radius: 10px; padding: 6px 18px; font-weight: 700; color: #222; text-decoration: none; display: inline-flex; align-items: center;">
+                    <i class="fas fa-envelope"></i> Email
+                </a>
+                <a href="https://twitter.com/intent/tweet?text=Check out my curated recommendations&url={{ profile_url }}" 
+                   target="_blank" style="background: #B3E0DD; border: 2px solid #000; border-radius: 10px; padding: 6px 18px; font-weight: 700; color: #222; text-decoration: none; display: inline-flex; align-items: center;">
+                    <i class="fab fa-twitter"></i> Tweet
+                </a>
+            </div>
+        </div>
+
+        <!-- QR Code -->
+        <div style="background: #fff; border: 2px solid #B3E0DD; border-radius: 18px; box-shadow: 2px 3px 0px #B3E0DD; margin-bottom: 24px; padding: 24px;">
+            <div style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">
+                <i class="fas fa-qrcode"></i> QR Code
+            </div>
+            <div style="display: flex; gap: 32px; align-items: flex-start;">
+                <div style="text-align: center;">
+                    <img src="{{ url_for('serve_qr', filename=qr_filename) }}" 
+                         alt="QR Code for {{ profile.name }}" 
+                         style="width: 120px; height: 120px; border: 2px solid #DCE45F; border-radius: 12px; box-shadow: 1px 2px 0px #DCE45F;">
+                    <div style="margin-top: 8px; font-size: 12px; color: #666;">
+                        Scan to visit your profile
+                    </div>
+                </div>
+                <div>
+                    <h3 style="font-size: 14px; margin-bottom: 8px; font-weight: 700;">Using QR Codes</h3>
+                    <ul style="font-size: 12px; padding-left: 16px; color: #222;">
+                        <li>Perfect for business cards</li>
+                        <li>Add to printed materials</li>
+                        <li>Share in person easily</li>
+                        <li>Works with any QR scanner</li>
+                    </ul>
+                    <div style="margin-top: 16px;">
+                        <a href="{{ url_for('serve_qr', filename=qr_filename) }}" 
+                           download="{{ profile.slug }}_qr_code.png" 
+                           style="background: #DCE45F; border: 2px solid #000; border-radius: 10px; padding: 8px 18px; font-weight: 700; color: #222; text-decoration: none; display: inline-flex; align-items: center;">
+                            <i class="fas fa-download"></i> Download QR Code
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Embed Code -->
+        <div style="background: #fff; border: 2px solid #B3E0DD; border-radius: 18px; box-shadow: 2px 3px 0px #B3E0DD; margin-bottom: 24px; padding: 24px;">
+            <div style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">
+                <i class="fas fa-code"></i> Embed Code
+            </div>
+            <p style="margin-bottom: 8px; color: #222;">Embed your profile on other websites:</p>
+            <textarea readonly style="font-family: monospace; font-size: 13px; height: 60px; border: 2px solid #DCE45F; border-radius: 10px; padding: 8px 12px; width: 100%; resize: none;" 
+                      onclick="this.select()">&lt;iframe src="{{ profile_url }}" width="100%" height="400" frameborder="0"&gt;&lt;/iframe&gt;</textarea>
+            <button onclick="copyEmbed()" style="margin-top: 8px; background: #DCE45F; border: 2px solid #000; border-radius: 10px; font-weight: 700; color: #222; cursor: pointer; padding: 8px 18px;">
+                <i class="fas fa-copy"></i> Copy Embed Code
+            </button>
+        </div>
+    {% else %}
+        <div style="background: #FFF3CD; border: 2px solid #FFD700; border-radius: 14px; padding: 18px 24px; color: #856404; font-size: 16px; font-weight: 700; margin-bottom: 24px;">
+            <i class="fas fa-exclamation-triangle"></i>
+            Your profile is currently private. Make it public in your 
+            <a href="{{ url_for('dashboard_profile') }}" style="color: #2C2C2E; text-decoration: underline;">profile settings</a> to enable sharing.
+        </div>
+    {% endif %}
+
+    <!-- Stats -->
+    <div style="background: #fff; border: 2px solid #B3E0DD; border-radius: 18px; box-shadow: 2px 3px 0px #B3E0DD; margin-top: 24px; padding: 24px;">
+        <div style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">
+            <i class="fas fa-chart-bar"></i> Profile Stats
+        </div>
+        <div style="display: flex; gap: 32px; justify-content: space-between;">
+            <div style="text-align: center; flex: 1;">
+                <div style="font-size: 22px; font-weight: bold; color: #2C2C2E;">
+                    {{ profile.categories|length }}
+                </div>
+                <div style="font-size: 13px; color: #888;">Categories</div>
+            </div>
+            <div style="text-align: center; flex: 1;">
+                <div style="font-size: 22px; font-weight: bold; color: #2C2C2E;">
+                    {% set total_recs = namespace(count=0) %}
+                    {% for category in profile.categories %}
+                        {% set total_recs.count = total_recs.count + category.recommendations|length %}
+                    {% endfor %}
+                    {{ total_recs.count }}
+                </div>
+                <div style="font-size: 13px; color: #888;">Recommendations</div>
+            </div>
+            <div style="text-align: center; flex: 1;">
+                <div style="font-size: 22px; font-weight: bold; color: #2C2C2E;">
+                    {{ "Public" if profile.is_public else "Private" }}
+                </div>
+                <div style="font-size: 13px; color: #888;">Visibility</div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 32px; text-align: center;">
+        <a href="{{ url_for('dashboard') }}" style="background: #B3E0DD; border: 2px solid #000; border-radius: 10px; padding: 10px 28px; font-weight: 700; color: #222; text-decoration: none; display: inline-flex; align-items: center;">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyUrl() {
+    const input = document.getElementById('profile-url');
+    input.select();
+    document.execCommand('copy');
+    
+    const button = event.target.closest('button');
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+    button.style.background = "#98FB98";
+    setTimeout(() => {
+        button.innerHTML = originalText;
+        button.style.background = "#DCE45F";
+    }, 2000);
+}
+
+function copyEmbed() {
+    const textarea = document.querySelector('textarea');
+    textarea.select();
+    document.execCommand('copy');
+    
+    const button = event.target.closest('button');
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+    button.style.background = "#98FB98";
+    setTimeout(() => {
+        button.innerHTML = originalText;
+        button.style.background = "#DCE45F";
+    }, 2000);
+}
+</script>
+{% endblock %}
