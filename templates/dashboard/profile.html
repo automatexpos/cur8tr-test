@@ -3,6 +3,7 @@
 {% block title %}Profile Settings - Dashboard - CUR8tr{% endblock %}
 
 {% block content %}
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <form id="profile-form" method="POST" enctype="multipart/form-data">
     {{ form.csrf_token }}
 
@@ -150,3 +151,256 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 {% endblock %}
+<style>
+/* Responsive profile page styles for all phone sizes */
+.profile-figma {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 100px;
+  gap: 40px;
+  background: #FDD4A4;
+  border: 4px solid #000;
+  box-shadow: 9px 12px 0 #000;
+  border-radius: 30px;
+  width: 900px;
+  max-width: 98vw;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+.profile-figma-header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.profile-figma-title {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 800;
+  font-size: 48px;
+  line-height: 1.1;
+  text-align: center;
+  color: #2C2C2E;
+  margin: 0;
+}
+.profile-figma-main {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  width: 100%;
+  justify-content: center;
+}
+.profile-figma-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 380px;
+  max-width: 98vw;
+}
+.profile-figma-row, .profile-figma-bio-row, .profile-figma-country-city-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 2px;
+}
+.profile-figma-input {
+  border: none;
+  background: #FDF0F0;
+  font-family: 'Barlow', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  color: rgba(0,0,0,0.7);
+  outline: none;
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 110px;
+  border: 4px solid #000;
+  box-sizing: border-box;
+}
+.profile-figma-upload-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 320px;
+  max-width: 98vw;
+}
+.profile-figma-upload-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+.profile-figma-upload-dropzone {
+  width: 100%;
+  min-height: 120px;
+  background: #FDF0F0;
+  border: 4px dashed #000;
+  border-radius: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+.profile-figma-upload-preview {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  object-fit: cover;
+  border: 2px solid #000;
+}
+.profile-figma-upload-preview-name {
+  font-size: 14px;
+  color: #222;
+  margin-top: 4px;
+}
+.profile-figma-upload-remove {
+  background: #ECBED9;
+  border: 2px solid #000;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-family: 'Barlow', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000;
+  cursor: pointer;
+  margin-top: 6px;
+}
+.profile-figma-current-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  object-fit: cover;
+  border: 2px solid #000;
+  margin-top: 8px;
+}
+.profile-figma-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  width: 100%;
+  justify-content: center;
+  margin-top: 30px;
+}
+.profile-figma-back-btn, .profile-figma-save-btn {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 30px;
+  background: #DCE45F;
+  border: 4px solid #000;
+  box-shadow: 4px 6px 0 #000;
+  border-radius: 110px;
+  font-family: 'Barlow', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.profile-figma-back-btn:hover, .profile-figma-save-btn:hover {
+  background: #e6f7a7;
+}
+.profile-figma-btn-text {
+  font-size: 18px;
+  font-weight: 700;
+}
+@media (max-width: 900px) {
+  .profile-figma {
+    width: 98vw !important;
+    max-width: 98vw !important;
+    min-width: 0 !important;
+    padding: 24px 2vw !important;
+    gap: 18px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+  .profile-figma-main {
+    flex-direction: column !important;
+    gap: 18px !important;
+    width: 100% !important;
+    align-items: center !important;
+  }
+  .profile-figma-form, .profile-figma-upload-col {
+    width: 98vw !important;
+    max-width: 98vw !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+  .profile-figma-actions {
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 98vw !important;
+    max-width: 98vw !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+}
+@media (max-width: 600px) {
+  .profile-figma {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+    padding: 8px 0 !important;
+    gap: 10px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+  .profile-figma-title {
+    font-size: 28px !important;
+    line-height: 36px !important;
+  }
+  .profile-figma-form, .profile-figma-upload-col {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    min-width: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+  .profile-figma-input {
+    font-size: 16px !important;
+    height: 32px !important;
+    border-radius: 40px !important;
+    padding: 0 6px !important;
+  }
+  .profile-figma-upload-preview, .profile-figma-current-image {
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 12px !important;
+  }
+  .profile-figma-actions {
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  .profile-figma-back-btn, .profile-figma-save-btn {
+    font-size: 16px !important;
+    border-radius: 40px !important;
+    padding: 8px 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+}
+</style>
