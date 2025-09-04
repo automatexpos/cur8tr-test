@@ -6,7 +6,10 @@
   <title>{% block title %}CUR8tr{% endblock %}</title>
   <!-- Fonts from Figma design -->
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@700&family=Anton&family=Fredoka+One&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <link href="{{ url_for('static', filename='css/layout.css') }}" rel="stylesheet">
+  <!-- <link href="{{ url_for('static', filename='css/layout.css') }}" rel="stylesheet"> -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}?v=1">
+
+
   {% block styles %}{% endblock %}
 
 </head>
@@ -52,15 +55,85 @@
     </main>
 
     <!-- === FOOTER === -->
-<footer style="background:#0e0e0e;padding:36px;text-align:center;margin-top:34px;">
-  <img src="{{ url_for('static', filename='img/logo_new.png') }}" alt="CUR8tr Logo" 
-  style="width: 84px; height: 84px; border-radius: 14px;">
-  <div style="color:#fff;font-size:22px;font-weight:700;margin-top:4px;margin-bottom:2px;">
-  </div>
-  <p style="color:#fff;margin-top:12px;font-size:34px;font-weight:900;letter-spacing:0.5px;font-family:'Barlow';">
-    © 2025 CUR8tr - curated rec lists
-  </p>
+<footer class="footer-responsive">
+    <img src="{{ url_for('static', filename='img/logo_new.png') }}" alt="CUR8tr Logo" class="footer-logo">
+    <div class="footer-title"></div>
+    <p class="footer-text">
+        © 2025 CUR8tr - curated rec lists
+    </p>
 </footer>
+<style>
+    .footer-responsive {
+        background: #0e0e0e;
+        padding: 36px;
+        text-align: center;
+        margin-top: 34px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    .footer-logo {
+        width: 84px;
+        height: 84px;
+        border-radius: 14px;
+        object-fit: cover;
+        margin-bottom: 8px;
+    }
+    .footer-title {
+        color: #fff;
+        font-size: 22px;
+        font-weight: 700;
+        margin-top: 4px;
+        margin-bottom: 2px;
+    }
+    .footer-text {
+        color: #fff;
+        margin-top: 12px;
+        font-size: 34px;
+        font-weight: 900;
+        letter-spacing: 0.5px;
+        font-family: 'Barlow', sans-serif;
+        margin-bottom: 0;
+    }
+    @media (max-width: 600px) {
+        .footer-responsive {
+            padding: 18px;
+            margin-top: 18px;
+        }
+        .footer-logo {
+            width: 56px;
+            height: 56px;
+            border-radius: 10px;
+        }
+        .footer-text {
+            font-size: 18px;
+            margin-top: 8px;
+        }
+        .footer-title {
+            font-size: 16px;
+        }
+    }
+    @media (max-width: 900px) {
+        .footer-responsive {
+            padding: 24px;
+            margin-top: 24px;
+        }
+        .footer-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+        }
+        .footer-text {
+            font-size: 24px;
+        }
+        .footer-title {
+            font-size: 18px;
+        }
+    }
+</style>
 </body>
 
     <!-- JavaScript -->

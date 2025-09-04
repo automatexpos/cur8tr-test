@@ -22,10 +22,11 @@ body {
 .main-header > img {
     background: #DCE45F !important;
 }
-.cur8tr-frame8 {
+.cur8tr-inline-frame8 {
     /* Remove absolute/fixed positioning and fixed height */
     position: relative;
-    width: 1320px;
+    width: 100%;
+    max-width: 1320px;
     margin: 60px auto 40px auto; /* Center and add spacing */
     padding: 60px 100px;
     background: #ecbed9;
@@ -39,8 +40,31 @@ body {
     min-height: 600px; /* Let it grow as needed */
     box-sizing: border-box;
 }
+
+@media (max-width: 900px) {
+    .cur8tr-inline-frame8 {
+        max-width: 98vw;
+        padding: 32px 16px;
+        border-radius: 20px;
+        margin: 32px auto 24px auto;
+        gap: 32px;
+    }
+}
+@media (max-width: 600px) {
+    .cur8tr-inline-frame8 {
+        max-width: 100vw;
+        width: 100vw;
+        padding: 16px 4px;
+        border-radius: 12px;
+        margin: 18px auto 12px auto;
+        gap: 18px;
+        min-height: 0;
+        box-shadow: 4px 6px 0px #000000;
+    }
+}
+
 </style>
-<div class="cur8tr-frame8">
+<div class="cur8tr-inline-frame8">
     <div class="cur8tr-frame7">
         <h1 class="cur8tr-frame7-heading">NEW Recommendations</h1>
     </div>
