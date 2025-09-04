@@ -136,20 +136,18 @@ header.navbar nav a:hover {
 /* Tablets (≤768px) */
 @media (max-width: 768px) {
   .container {
-    max-width: 98vw;
-    width: 98vw;
-    padding: 0 12px;
+    max-width: 768px;
+    width: 768px;
+    padding: 0;
   }
 }
 
 /* Mobile (≤390px) */
 @media (max-width: 390px) {
   .container {
-    max-width: 100vw;
-    width: 100vw;
-    padding: 0 6px;
-    min-width: 0;
-    box-sizing: border-box;
+    max-width: 390px;
+    width: 390px;
+    padding: 0;
   }
 }
 
@@ -982,6 +980,8 @@ body.categories-bg .main-header img {
 
 @media (max-width: 390px) {
   .main-header {
+    flex-direction: column;
+    align-items: flex-start;
     width: 100%;
     padding: 8px 10px;
   }
@@ -1140,6 +1140,7 @@ body.categories-bg .main-header img {
   align-items: center;
   padding: 10px 20px;
   gap: 10px;
+  max-width: 516px;
   width: 100%;
   height: 56px;
   background: #FDF0F0;
@@ -1147,6 +1148,11 @@ body.categories-bg .main-header img {
   border-radius: 110px;
   font-size: 1.2rem;
   color: rgba(0,0,0,0.4);
+}
+@media (max-width: 390px) {
+  .register-row {
+    max-width: 282px;
+  }
 }
 
 .register-input {
@@ -1167,6 +1173,7 @@ body.categories-bg .main-header img {
   font-size: clamp(16px, 2.5vw, 20px);
   padding: 10px 5%;
   font-family: 'Barlow', sans-serif;
+  border-radius: 60px;
 
 }
 .register-login-btn {
@@ -1192,8 +1199,8 @@ body.categories-bg .main-header img {
 
 @media (max-width: 768px) {
   .register-login-btn {
-    width: 70vw;
-    max-width: 98vw;
+    width: 100%;
+    max-width: 282px;
     padding: 10px 16px;
     font-size: 18px;
     border-radius: 60px;
@@ -1201,8 +1208,8 @@ body.categories-bg .main-header img {
 }
 @media (max-width: 390px) {
   .register-login-btn {
-    width: 98vw;
-    max-width: 100vw;
+    max-width: 282px;
+    width: 100%;
     padding: 8px 8px;
     font-size: 15px;
     border-radius: 32px;
@@ -1211,8 +1218,8 @@ body.categories-bg .main-header img {
 
 @media (max-width: 768px) {
   .register-btn {
-    width: 98vw;
-    max-width: 98vw;
+    max-width: 516px;
+    width: 100%;
     padding: 10px 16px;
     font-size: 18px;
     border-radius: 60px;
@@ -1220,8 +1227,8 @@ body.categories-bg .main-header img {
 }
 @media (max-width: 390px) {
   .register-btn {
-    width: 100vw;
-    max-width: 100vw;
+    max-width: 292px;
+    width: 100%;
     padding: 8px 8px;
     font-size: 15px;
     border-radius: 32px;
