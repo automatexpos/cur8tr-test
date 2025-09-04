@@ -3,6 +3,66 @@
 {% block title %}{{ profile.name }} - CUR8tr{% endblock %}
 
 {% block content %}
+<style>
+.frame29-share-btn-responsive {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 30px;
+    gap: 10px;
+    width: 320px;
+    max-width: 100%;
+    height: 56px;
+    background: #B5B0D8;
+    border: 4px solid #000000;
+    box-shadow: 4px 6px 0px #000000;
+    border-radius: 110px;
+    color: #2C2C2E;
+    font-size: 1rem;
+    font-family: 'Barlow', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    outline: none;
+    box-sizing: border-box;
+    text-decoration: none;
+    min-width: 0;
+    transition: background 0.2s, transform 0.2s;
+    margin-left: auto;
+    
+}
+@media (max-width: 1400px) {
+    .frame29-share-btn-responsive {
+        width: 280px;
+        padding: 10px 24px;
+        font-size: 0.98rem;
+    }
+}
+@media (max-width: 768px) {
+    .frame29-share-btn-responsive {
+        width: 50vw;
+        max-width: 50vw;
+        font-size: 0.95rem;
+        padding: 10px 0;
+        height: 48px;
+        border-radius: 60px;
+        margin-left: 0;
+    }
+}
+@media (max-width: 390px) {
+    .frame29-share-btn-responsive {
+        width: 35vw;
+        max-width: 35vw;
+        font-size: 0.92rem;
+        padding: 8px 0;
+        height: 44px;
+        border-radius: 40px;
+        margin-left: 0;
+        box-sizing: border-box;
+    }
+}
+</style>
 <!-- Frame 8 Container -->
 <div class="frame8-profile-container">
 
@@ -28,32 +88,6 @@
                         <a href="javascript:void(0);"
                                  onclick="shareProfile('{{ profile.name }}', '{{ url_for('view_profile', slug=profile.slug, _external=True) }}', '{{ profile.bio[:100] if profile.bio else '' }}')"
                                  class="frame29-share-btn-responsive"
-                                 style="
-                                        display: flex;
-                                        flex-direction: row;
-                                        justify-content: center;
-                                        align-items: center;
-                                        padding: 10px 30px;
-                                        gap: 10px;
-                                        width: 309px;
-                                        height: 56px;
-                                        background: #B5B0D8;
-                                        border: 4px solid #000000;
-                                        box-shadow: 4px 6px 0px #000000;
-                                        border-radius: 110px;
-                                        color: #2C2C2E;
-                                        font-size: 1rem;
-                                        font-family: 'Barlow', sans-serif;
-                                        font-weight: 700;
-                                        cursor: pointer;
-                                        white-space: nowrap;
-                                        outline: none;
-                                        box-sizing: border-box;
-                                        text-decoration: none;
-                                        min-width: 0;
-                                        transition: background 0.2s, transform 0.2s;
-                                        margin-left: auto;
-                                 "
                                  onmouseover="this.style.background='#B3E0DD';this.style.transform='translateY(-2px)'"
                                  onmouseout="this.style.background='#B5B0D8';this.style.transform='none'">
                                         <img src="{{ url_for('static', filename='svg/arrow_right.svg') }}" alt="Share" style="width:20px;height:20px;vertical-align:middle;">
@@ -66,7 +100,6 @@
                                     <form method="POST" action="{{ url_for('unfollow_user', user_id=profile.user_id) }}" style="margin: 0;">
                                         <button type="submit"
                                                         class="frame29-share-btn-responsive"
-                                                        style="display: flex; flex-direction: row; justify-content: center; align-items: center; padding: 10px 30px; gap: 10px; width: 309px; height: 56px; background: #B5B0D8; border: 4px solid #000000; box-shadow: 4px 6px 0px #000000; border-radius: 110px; color: #2C2C2E; font-size: 1rem; font-family: 'Barlow', sans-serif; font-weight: 700; cursor: pointer; white-space: nowrap; outline: none; box-sizing: border-box; text-decoration: none; min-width: 0; transition: background 0.2s, transform 0.2s; margin-left: auto;"
                                                         onmouseover="this.style.background='#B3E0DD';this.style.transform='translateY(-2px)'"
                                                         onmouseout="this.style.background='#B5B0D8';this.style.transform='none'">
                                             <i class="fas fa-user-minus" style="margin-right:8px;"></i> Unfollow
@@ -76,7 +109,6 @@
                                     <form method="POST" action="{{ url_for('follow_user', user_id=profile.user_id) }}" style="margin: 0;">
                                         <button type="submit"
                                                         class="frame29-share-btn-responsive"
-                                                        style="display: flex; flex-direction: row; justify-content: center; align-items: center; padding: 10px 30px; gap: 10px; width: 309px; height: 56px; background: #B5B0D8; border: 4px solid #000000; box-shadow: 4px 6px 0px #000000; border-radius: 110px; color: #2C2C2E; font-size: 1rem; font-family: 'Barlow', sans-serif; font-weight: 700; cursor: pointer; white-space: nowrap; outline: none; box-sizing: border-box; text-decoration: none; min-width: 0; transition: background 0.2s, transform 0.2s; margin-left: auto;"
                                                         onmouseover="this.style.background='#B3E0DD';this.style.transform='translateY(-2px)'"
                                                         onmouseout="this.style.background='#B5B0D8';this.style.transform='none'">
                                             <i class="fas fa-user-plus" style="margin-right:8px;"></i> Follow
@@ -86,28 +118,8 @@
                             </div>
                         {% endif %}
         </div>
-        <style>
-        @media (max-width: 600px) {
-            .frame29-share-btn-responsive {
-                width: 100% !important;
-                min-width: 0 !important;
-                font-size: 0.95rem !important;
-                padding: 10px 0 !important;
-                height: auto !important;
-                border-radius: 60px !important;
-                justify-content: center !important;
-                margin-left: 0 !important;
-            }
-            .frame29-profile-header {
-                flex-direction: column !important;
-                align-items: stretch !important;
-            }
-            .frame29-share-btn-responsive + form {
-                width: 100% !important;
-            }
-        }
-        </style>
-</div>
+
+    </div>
         <!-- {% if session.user_id and session.user_id != profile.user_id %}
             <div class="frame29-profile-follow">
                 {% set current_user = get_current_user() %}
@@ -343,7 +355,7 @@
         </div>
     </div>
     <style>
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
         .frame48-share-profile {
             flex-direction: column !important;
             align-items: stretch !important;

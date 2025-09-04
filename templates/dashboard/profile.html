@@ -29,11 +29,11 @@
         </div>
         <!-- Country & City -->
         <div class="profile-figma-country-city-row">
-          <div class="profile-figma-country-city-field">
+          <div class="profile-figma-country-field">
             <img src="{{ url_for('static', filename='svg/globe-earth.svg') }}" alt="Country" class="profile-figma-icon">
             {{ form.country(class="profile-figma-input", placeholder="Country") }}
           </div>
-          <div class="profile-figma-country-city-field">
+          <div class="profile-figma-city-field">
             <img src="{{ url_for('static', filename='svg/globe-earth.svg') }}" alt="City" class="profile-figma-icon">
             {{ form.city(class="profile-figma-input", placeholder="City") }}
           </div>
@@ -195,33 +195,21 @@ document.addEventListener('DOMContentLoaded', function() {
 .profile-figma-form {
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  width: 380px;
-  max-width: 98vw;
+  gap: 25px;
+  width: 100%;
+  max-width: 390px;
+  margin-bottom: auto;
 }
-.profile-figma-row, .profile-figma-bio-row, .profile-figma-country-city-row {
+.profile-figma-row, .profile-figma-bio-row {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 10px;
+  max-width: 193px;
   width: 100%;
   margin-bottom: 2px;
 }
-.profile-figma-input {
-  border: none;
-  background: #FDF0F0;
-  font-family: 'Barlow', sans-serif;
-  font-weight: 800;
-  font-size: 20px;
-  color: rgba(0,0,0,0.7);
-  outline: none;
-  width: 100%;
-  height: 40px;
-  padding: 0 12px;
-  border-radius: 110px;
-  border: 4px solid #000;
-  box-sizing: border-box;
-}
+
 .profile-figma-upload-col {
   display: flex;
   flex-direction: column;
@@ -317,46 +305,9 @@ document.addEventListener('DOMContentLoaded', function() {
   font-size: 18px;
   font-weight: 700;
 }
-@media (max-width: 900px) {
+@media (max-width: 1400px) {
   .profile-figma {
-    width: 98vw !important;
-    max-width: 98vw !important;
-    min-width: 0 !important;
-    padding: 24px 2vw !important;
-    gap: 18px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    box-sizing: border-box !important;
-    overflow-x: hidden !important;
-  }
-  .profile-figma-main {
-    flex-direction: column !important;
-    gap: 18px !important;
     width: 100% !important;
-    align-items: center !important;
-  }
-  .profile-figma-form, .profile-figma-upload-col {
-    width: 98vw !important;
-    max-width: 98vw !important;
-    min-width: 0 !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    box-sizing: border-box !important;
-  }
-  .profile-figma-actions {
-    flex-direction: column !important;
-    gap: 12px !important;
-    width: 98vw !important;
-    max-width: 98vw !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-}
-@media (max-width: 600px) {
-  .profile-figma {
-    width: 100vw !important;
-    max-width: 100vw !important;
-    min-width: 0 !important;
     padding: 8px 0 !important;
     gap: 10px !important;
     margin-left: auto !important;
@@ -369,9 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
     line-height: 36px !important;
   }
   .profile-figma-form, .profile-figma-upload-col {
-    width: 100vw !important;
-    max-width: 100vw !important;
-    min-width: 0 !important;
+    width: 100% !important;
     margin-left: auto !important;
     margin-right: auto !important;
     box-sizing: border-box !important;
@@ -379,7 +328,6 @@ document.addEventListener('DOMContentLoaded', function() {
   .profile-figma-input {
     font-size: 16px !important;
     height: 32px !important;
-    border-radius: 40px !important;
     padding: 0 6px !important;
   }
   .profile-figma-upload-preview, .profile-figma-current-image {
@@ -390,8 +338,8 @@ document.addEventListener('DOMContentLoaded', function() {
   .profile-figma-actions {
     flex-direction: column !important;
     gap: 8px !important;
-    width: 100vw !important;
-    max-width: 100vw !important;
+    width: 100% !important;
+    
     margin-left: auto !important;
     margin-right: auto !important;
   }
@@ -399,8 +347,106 @@ document.addEventListener('DOMContentLoaded', function() {
     font-size: 16px !important;
     border-radius: 40px !important;
     padding: 8px 0 !important;
-    width: 100vw !important;
-    max-width: 100vw !important;
+    width: 100% !important;
+    
+  }
+}
+@media (max-width: 768px) {
+  .profile-figma {
+    width: 100% !important;
+    padding: 8px 0 !important;
+    gap: 10px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+  .profile-figma-title {
+    font-size: 28px !important;
+    line-height: 36px !important;
+  }
+  .profile-figma-form, .profile-figma-upload-col {
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+  .profile-figma-input {
+    width: calc(100% - 36px); /* ensures input doesn't overlap icon */
+    display: inline-block;
+    vertical-align: middle;
+  }
+  .profile-figma-upload-preview, .profile-figma-current-image {
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 12px !important;
+  }
+  .profile-figma-actions {
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+    
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  .profile-figma-back-btn, .profile-figma-save-btn {
+    font-size: 16px !important;
+    border-radius: 40px !important;
+    padding: 8px 0 !important;
+    width: 100% !important;
+    
+  }
+}
+@media (max-width: 390px) {
+  .profile-figma {
+    width: 100% !important;
+    padding: 8px 0 !important;
+    gap: 10px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+  .profile-figma-title {
+    font-size: 28px !important;
+    line-height: 36px !important;
+  }
+  .profile-figma-form, .profile-figma-upload-col {
+    width: 100% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    box-sizing: border-box !important;
+  }
+  .profile-figma-input {
+    font-size: 16px !important;
+    height: 32px !important;
+    padding: 0 4px !important;
+    
+    width: 100% !important;
+    min-width: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-sizing: border-box !important;
+  }
+  .profile-figma-upload-preview, .profile-figma-current-image {
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 12px !important;
+  }
+  .profile-figma-actions {
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+    
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  .profile-figma-back-btn, .profile-figma-save-btn {
+    font-size: 16px !important;
+    border-radius: 40px !important;
+    padding: 8px 0 !important;
+    width: 100% !important;
+    
   }
 }
 </style>
