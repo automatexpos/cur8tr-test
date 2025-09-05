@@ -16,12 +16,13 @@
 
 <!-- Manage Your Content Section -->
 <section class="manage-content-figma">
+  <section class="manage-content-inner-figma">
   <h2 class="manage-content-title">Manage Your Content</h2>
   <div class="manage-content-row">
     <!-- Profile Settings Card -->
     <a href="{{ url_for('dashboard_profile') }}" class="manage-content-card">
       <div class="manage-content-card-icon">
-        <img src="{{ url_for('static', filename='svg/profilesetting.svg') }}" alt="Profile" width="38" height="38">
+        <img src="{{ url_for('static', filename='svg/profilesetting.svg') }}" alt="Profile" width="50" height="50">
       </div>
       <div class="manage-content-card-info">
         <div class="manage-content-card-title">Profile Settings</div>
@@ -31,7 +32,7 @@
     <!-- Categories Card -->
     <a href="{{ url_for('dashboard_categories') }}" class="manage-content-card">
       <div class="manage-content-card-icon">
-        <img src="{{ url_for('static', filename='svg/categories_dashboard.svg') }}" alt="Categories" width="38" height="38">
+        <img src="{{ url_for('static', filename='svg/categories_dashboard.svg') }}" alt="Categories" width="50" height="50">
       </div>
       <div class="manage-content-card-info">
         <div class="manage-content-card-title">Categories</div>
@@ -41,7 +42,7 @@
     <!-- Recommendations Card -->
     <a href="{{ url_for('dashboard_recommendations') }}" class="manage-content-card">
       <div class="manage-content-card-icon">
-        <img src="{{ url_for('static', filename='svg/recommendations_dashboard.svg') }}" alt="Recommendations" width="38" height="38">
+        <img src="{{ url_for('static', filename='svg/recommendations_dashboard.svg') }}" alt="Recommendations" width="50" height="50">
       </div>
       <div class="manage-content-card-info">
         <div class="manage-content-card-title">Recommendations</div>
@@ -50,7 +51,7 @@
     </a>
   </div>
 </section>
-        
+</section>
 <!-- Quick Actions and Recent Recommendations -->
 <section class="quick-actions-figma">
 <h2 class="quick-actions-title">Quick Actions</h2>
@@ -59,7 +60,7 @@
     <!-- Add Category Card -->
     <a href="#" class="quick-action-card" id="quick-add-category">
       <div class="quick-action-card-icon">
-        <img src="{{ url_for('static', filename='svg/plus-circle.svg') }}" alt="Add Category" width="38" height="38">
+        <img src="{{ url_for('static', filename='svg/plus-circle.svg') }}" alt="Add Category" width="50" height="50">
       </div>
       <div class="quick-action-card-info">
         <div class="quick-action-card-title">Add Category</div>
@@ -68,7 +69,7 @@
     <!-- Add Recommendation Card -->
     <a href="{{ url_for('new_recommendation') }}" class="quick-action-card">
       <div class="quick-action-card-icon">
-        <img src="{{ url_for('static', filename='svg/star.svg') }}" alt="Add Recommendation" width="38" height="38">
+        <img src="{{ url_for('static', filename='svg/star.svg') }}" alt="Add Recommendation" width="50" height="50">
       </div>
       <div class="quick-action-card-info">
         <div class="quick-action-card-title">Add Recommendation</div>
@@ -77,7 +78,7 @@
     <!-- View Profile Card -->
     <a href="{{ url_for('view_profile', slug=profile.slug) }}" class="quick-action-card">
       <div class="quick-action-card-icon">
-        <img src="{{ url_for('static', filename='svg/eye.svg') }}" alt="View Profile" width="38" height="38">
+        <img src="{{ url_for('static', filename='svg/eye.svg') }}" alt="View Profile" width="50" height="50">
       </div>
       <div class="quick-action-card-info">
         <div class="quick-action-card-title">View Profile</div>
@@ -86,7 +87,7 @@
     <!-- Share Profile Card -->
     <a href="{{ url_for('dashboard_share') }}" class="quick-action-card">
       <div class="quick-action-card-icon">
-        <img src="{{ url_for('static', filename='svg/arrow_right.svg') }}" alt="Share Profile" width="38" height="38">
+        <img src="{{ url_for('static', filename='svg/arrow_right.svg') }}" alt="Share Profile" width="50" height="50">
       </div>
       <div class="quick-action-card-info">
         <div class="quick-action-card-title">Share Profile</div>
@@ -107,6 +108,7 @@
 } %}     
 
 <div class="recent-recommendations-section-bg">
+  <div class="recent-recommendations-inner-bg">
   <h2 class="recent-recommendations-title">Recent Recommendations</h2>
     <div class="recent-recommendations-grid">
       {% for rec in recent_recs %}
@@ -150,6 +152,7 @@
         <img src="{{ url_for('static', filename='svg/arrow-right-simple.svg') }}" alt="Arrow" class="recent-recommendations-btn-svg">
       </a>
     </div>
+</div>
 
     <!-- Category Modal -->
 <div id="category-modal-overlay" style="display:none;"></div>

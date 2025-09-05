@@ -81,6 +81,7 @@
 <!-- === POPULAR PRO TIPS === -->
 {% if popular_pro_tips %}
 <section class="popular-pro-tips-section">
+  <div class="popular-pro-tips-inner">
   <h2 class="section-title popular-pro-tips-title">
     POPULAR PRO TIPS
   </h2>
@@ -128,6 +129,7 @@
       </a>
     {% endfor %}
   </div>
+  </div>
 </section>
 {% endif %}
 
@@ -136,28 +138,28 @@
 <section class="features-row">
   <div class="feature-card">
     <div class="feature-icon">
-      <img src="{{ url_for('static', filename='svg/arrow_right.svg') }}" alt="Rec List" width="28" height="28">
+      <img src="{{ url_for('static', filename='svg/arrow_right.svg') }}" alt="Rec List" width="50" height="50">
     </div>
     <div class="feature-title">Rec List</div>
     <div class="feature-desc">Curate all your recommendations on your profile and share with friends and followers.</div>
   </div>
   <div class="feature-card">
     <div class="feature-icon">
-      <img src="{{ url_for('static', filename='svg/settings.svg') }}" alt="Customize" width="28" height="28">
+      <img src="{{ url_for('static', filename='svg/settings.svg') }}" alt="Customize" width="50" height="50">
     </div>
     <div class="feature-title">Customize</div>
     <div class="feature-desc">You can create custom categories or use our pre-built categories. Have a favorite hiking trail, fly fishing spot or your top 3 pizza spots in the world? Curate those lists here!</div>
   </div>
   <div class="feature-card">
     <div class="feature-icon">
-      <img src="{{ url_for('static', filename='svg/follow_users.svg') }}" alt="Follow Other CUR8trs" width="28" height="28">
+      <img src="{{ url_for('static', filename='svg/follow_users.svg') }}" alt="Follow Other CUR8trs" width="50" height="50">
     </div>
     <div class="feature-title">Follow Other CUR8trs</div>
     <div class="feature-desc">See recommendations that you like? Follow that CUR8tr.</div>
   </div>
   <div class="feature-card">
     <div class="feature-icon">
-      <img src="{{ url_for('static', filename='svg/qr.svg') }}" alt="QR Codes" width="28" height="28">
+      <img src="{{ url_for('static', filename='svg/qr.svg') }}" alt="QR Codes" width="50" height="50">
     </div>
     <div class="feature-title">QR Codes</div>
     <div class="feature-desc">Generate QR codes for easy sharing in person or on printed materials.</div>
