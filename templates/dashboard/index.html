@@ -3,8 +3,11 @@
 {% block title %}Dashboard - CUR8tr{% endblock %}
 
 {% block content %}
-<h1 class="dashboard-title">Dashboard</h1>
-    
+<!-- <h1 class="dashboard-title">Dashboard</h1> -->
+<h1 class="dashboard-title">
+  <span class="stroke">DASHBOARD</span>
+  <span class="fill">DASHBOARD</span>
+</h1>
     <!-- Import and render personalized welcome message -->
     {% from 'components/welcome_message.html' import render_personalized_welcome %}
     {{ render_personalized_welcome(welcome_message) }}
@@ -17,7 +20,11 @@
 <!-- Manage Your Content Section -->
 <section class="manage-content-figma">
   <section class="manage-content-inner-figma">
-  <h2 class="manage-content-title">Manage Your Content</h2>
+  <!-- <h2 class="manage-content-title">Manage Your Content</h2> -->
+<h2 class="manage-content-title">
+  <span class="stroke">MANAGE YOUR CONTENT</span>
+  <span class="fill">MANAGE YOUR CONTENT</span>
+</h2>
   <div class="manage-content-row">
     <!-- Profile Settings Card -->
     <a href="{{ url_for('dashboard_profile') }}" class="manage-content-card">
@@ -54,8 +61,11 @@
 </section>
 <!-- Quick Actions and Recent Recommendations -->
 <section class="quick-actions-figma">
-<h2 class="quick-actions-title">Quick Actions</h2>
-
+<!-- <h2 class="quick-actions-title">Quick Actions</h2> -->
+<h2 class="quick-actions-title">
+  <span class="stroke">QUICK ACTIONS</span>
+  <span class="fill">QUICK ACTIONS</span>
+</h2>
   <div class="quick-actions-row">
     <!-- Add Category Card -->
     <a href="#" class="quick-action-card" id="quick-add-category">
@@ -109,7 +119,11 @@
 
 <div class="recent-recommendations-section-bg">
   <div class="recent-recommendations-inner-bg">
-  <h2 class="recent-recommendations-title">Recent Recommendations</h2>
+  <!-- <h2 class="recent-recommendations-title">RECENT RECOMMENDATIONS</h2> -->
+<h2 class="recent-recs-dashboard-title">
+  <span class="stroke">RECENT RECOMMENDATIONS</span>
+  <span class="fill">RECENT RECOMMENDATIONS</span>
+</h2>  
     <div class="recent-recommendations-grid">
       {% for rec in recent_recs %}
         <div class="recent-recommendation-card">

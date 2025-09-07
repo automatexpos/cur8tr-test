@@ -44,7 +44,11 @@
     'Festivals': 'festivals.svg'
 } %}
 {% if recent_recommendations %}
-<h2 class="recent-recs-title">RECENT RECOMMENDATIONS</h2>
+<!-- <h2 class="recent-recs-title">RECENT RECOMMENDATIONS</h2> -->
+<h1 class="recent-recs-title">
+  <span class="stroke">RECENT RECOMMENDATIONS</span>
+  <span class="fill">RECENT RECOMMENDATIONS</span>
+</h1>
 <div class="recent-recs-row">
   {% for rec in recent_recommendations[:4] %}
     <div class="rec-card">
@@ -82,9 +86,13 @@
 {% if popular_pro_tips %}
 <section class="popular-pro-tips-section">
   <div class="popular-pro-tips-inner">
-  <h2 class="section-title popular-pro-tips-title">
+<!--   <h2 class="section-title popular-pro-tips-title">
     POPULAR PRO TIPS
-  </h2>
+  </h2> -->
+<h2 class="popular-protips-title">
+  <span class="stroke">POPULAR PRO TIPS</span>
+  <span class="fill">POPULAR PRO TIPS</span>
+</h2>  
   <div class="popular-pro-tips-grid">
     {% for tip in popular_pro_tips %}
       <a href="{{ url_for('view_recommendation', profile_slug=tip.category.profile.slug, category_slug=tip.category.slug, rec_id=tip.id) }}"
@@ -134,7 +142,11 @@
 {% endif %}
 
 <!-- === FEATURES === -->
-<h2 class="features-public-profiles-title">OUR FEATURES</h2>
+<!-- <h2 class="features-public-profiles-title">OUR FEATURES</h2> -->
+<h1 class="our-features-title">
+  <span class="stroke">OUR FEATURES</span>
+  <span class="fill">OUR FEATURES</span>
+</h1>
 <section class="features-row">
   <div class="feature-card">
     <div class="feature-icon">
@@ -169,7 +181,11 @@
 <!-- === RECENT PROFILES === -->
 {% if profiles %}
 <section class="recent-public-profiles-section">
-  <h2 class="section-title recent-public-profiles-title">RECENT PUBLIC PROFILES</h2>
+  <!-- <h2 class="section-title recent-public-profiles-title">RECENT PUBLIC PROFILES</h2> -->
+<h1 class="recent-public-profiles-title">
+  <span class="stroke">RECENT PUBLIC PROFILES</span>
+  <span class="fill">RECENT PUBLIC PROFILES</span>
+</h1>
   <div class="recent-public-profiles-grid">
     {% for profile in profiles %}
       <article class="public-profile-card">
