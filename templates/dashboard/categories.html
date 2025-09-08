@@ -9,168 +9,61 @@
   }
 </style>
 {% endblock %}
+
 {% block body_class %}categories-bg{% endblock %}
+
 {% block content %}
 <section class="categories-dashboard">
   <div class="categories-header-row">
     <div class="categories-title">MANAGE CATEGORIES</div>
     <button type="button" class="categories-add-btn">
-    <img src="{{ url_for('static', filename='svg/plus-circle.svg') }}" alt="Add" class="categories-add-icon">
-    <span>Add Custom Category</span>
+      <img src="{{ url_for('static', filename='svg/plus-circle.svg') }}" alt="Add" class="categories-add-icon">
+      <span>Add Custom Category</span>
     </button>
   </div>
-  <div class="categories-grid">
-    <!-- Books -->
+  {% set icon_map = {
+    "Books": "book-text.svg",
+    "Food": "food-tray.svg",
+    "Youtube Channels": "youtube.svg",
+    "Apps": "mobile.svg",
+    "Products": "box.svg",
+    "Where to Stay": "location-pin.svg"
+  } %}
+
+  <!-- Categories Grid -->
+<div class="categories-grid">
+  {% for category in categories[:6] %}
+    {% set icon_file = icon_map.get(category.name, "default.svg") %}
     <div class="category-card">
       <div class="category-card-header">
         <div class="category-card-title-row">
           <span class="category-card-icon">
-            <img src="{{ url_for('static', filename='svg/book-text.svg') }}" alt="Books">
+            <img src="{{ url_for('static', filename='svg/' ~ icon_file) }}" alt="{{ category.name }}">
           </span>
-          <span class="category-card-title">Books</span>
+          <span class="category-card-title">{{ category.name }}</span>
         </div>
-        <span class="category-card-count">0</span>
+        <span class="category-card-count">{{ category.count or 0 }}</span>
       </div>
       <div class="category-card-description">
-        Your favorite books & reading recommendations
+        {{ category.description }}
       </div>
       <div class="category-card-actions">
-        <a href="{{ url_for('dashboard_recommendations', category_id=1) }}" class="category-action-btn add">
-          <img src="{{ url_for('static', filename='svg/plus-circle.svg') }}" alt="Add">
-          <span>Add Item</span>
-        </a>
-        <a href="{{ url_for('view_category', profile_slug=profile.slug, category_slug='books') }}" target="_blank" class="category-action-btn view">
-          <img src="{{ url_for('static', filename='svg/eye.svg') }}" alt="View">
-          <span>View</span>
-        </a>
+      <button type="button" class="category-action-btn add" 
+              onclick="window.location.href='{{ url_for('dashboard_recommendations', category_id=category.id) }}'">
+        <img src="{{ url_for('static', filename='svg/plus-circle.svg') }}" alt="Add">
+        <span>Add Item</span>
+      </button>
+
+      <button type="button" class="category-action-btn view" 
+              onclick="window.open('{{ url_for('view_category', profile_slug=profile.slug, category_slug=category.slug) }}', '_blank')">
+        <img src="{{ url_for('static', filename='svg/eye.svg') }}" alt="View">
+        <span>View</span>
+      </button>
       </div>
     </div>
-    <!-- Food -->
-    <div class="category-card">
-      <div class="category-card-header">
-        <div class="category-card-title-row">
-          <span class="category-card-icon">
-            <img src="{{ url_for('static', filename='svg/food-tray.svg') }}" alt="Food">
-          </span>
-          <span class="category-card-title">Food</span>
-        </div>
-        <span class="category-card-count">0</span>
-      </div>
-      <div class="category-card-description">
-        Restaurants, recipes, & food recommendations
-      </div>
-      <div class="category-card-actions">
-        <a href="{{ url_for('dashboard_recommendations', category_id=2) }}" class="category-action-btn add">
-          <img src="{{ url_for('static', filename='svg/plus-circle.svg') }}" alt="Add">
-          <span>Add Item</span>
-        </a>
-        <a href="{{ url_for('view_category', profile_slug=profile.slug, category_slug='food') }}" target="_blank" class="category-action-btn view">
-          <img src="{{ url_for('static', filename='svg/eye.svg') }}" alt="View">
-          <span>View</span>
-        </a>
-      </div>
-    </div>
-    <!-- Youtube Channels -->
-    <div class="category-card">
-      <div class="category-card-header">
-        <div class="category-card-title-row">
-          <span class="category-card-icon">
-            <img src="{{ url_for('static', filename='svg/youtube.svg') }}" alt="Youtube Channels">
-          </span>
-          <span class="category-card-title">Youtube Channels</span>
-        </div>
-        <span class="category-card-count">0</span>
-      </div>
-      <div class="category-card-description">
-        Amazing YouTube channels worth following
-      </div>
-      <div class="category-card-actions">
-        <a href="{{ url_for('dashboard_recommendations', category_id=3) }}" class="category-action-btn add">
-          <img src="{{ url_for('static', filename='svg/plus-circle.svg') }}" alt="Add">
-          <span>Add Item</span>
-        </a>
-        <a href="{{ url_for('view_category', profile_slug=profile.slug, category_slug='youtube-channels') }}" target="_blank" class="category-action-btn view">
-          <img src="{{ url_for('static', filename='svg/eye.svg') }}" alt="View">
-          <span>View</span>
-        </a>
-      </div>
-    </div>
-    <!-- Apps -->
-    <div class="category-card">
-      <div class="category-card-header">
-        <div class="category-card-title-row">
-          <span class="category-card-icon">
-            <img src="{{ url_for('static', filename='svg/mobile.svg') }}" alt="Apps">
-          </span>
-          <span class="category-card-title">Apps</span>
-        </div>
-        <span class="category-card-count">0</span>
-      </div>
-      <div class="category-card-description">
-        Useful apps and digital tools
-      </div>
-      <div class="category-card-actions">
-        <a href="{{ url_for('dashboard_recommendations', category_id=4) }}" class="category-action-btn add">
-          <img src="{{ url_for('static', filename='svg/plus-circle.svg') }}" alt="Add">
-          <span>Add Item</span>
-        </a>
-        <a href="{{ url_for('view_category', profile_slug=profile.slug, category_slug='apps') }}" target="_blank" class="category-action-btn view">
-          <img src="{{ url_for('static', filename='svg/eye.svg') }}" alt="View">
-          <span>View</span>
-        </a>
-      </div>
-    </div>
-    <!-- Products -->
-    <div class="category-card">
-      <div class="category-card-header">
-        <div class="category-card-title-row">
-          <span class="category-card-icon">
-            <img src="{{ url_for('static', filename='svg/box.svg') }}" alt="Products">
-          </span>
-          <span class="category-card-title">Products</span>
-        </div>
-        <span class="category-card-count">0</span>
-      </div>
-      <div class="category-card-description">
-        Products and services you love
-      </div>
-      <div class="category-card-actions">
-        <a href="{{ url_for('dashboard_recommendations', category_id=5) }}" class="category-action-btn add">
-          <img src="{{ url_for('static', filename='svg/plus-circle.svg') }}" alt="Add">
-          <span>Add Item</span>
-        </a>
-        <a href="{{ url_for('view_category', profile_slug=profile.slug, category_slug='products') }}" target="_blank" class="category-action-btn view">
-          <img src="{{ url_for('static', filename='svg/eye.svg') }}" alt="View">
-          <span>View</span>
-        </a>
-      </div>
-    </div>
-    <!-- Where to Stay -->
-    <div class="category-card">
-      <div class="category-card-header">
-        <div class="category-card-title-row">
-          <span class="category-card-icon">
-            <img src="{{ url_for('static', filename='svg/location-pin.svg') }}" alt="Where to Stay">
-          </span>
-          <span class="category-card-title">Where to Stay</span>
-        </div>
-        <span class="category-card-count">0</span>
-      </div>
-      <div class="category-card-description">
-        Hotels, accommodations, and travel spots
-      </div>
-      <div class="category-card-actions">
-        <a href="{{ url_for('dashboard_recommendations', category_id=6) }}" class="category-action-btn add">
-          <img src="{{ url_for('static', filename='svg/plus-circle.svg') }}" alt="Add">
-          <span>Add Item</span>
-        </a>
-        <a href="{{ url_for('view_category', profile_slug=profile.slug, category_slug='where-to-stay') }}" target="_blank" class="category-action-btn view">
-          <img src="{{ url_for('static', filename='svg/eye.svg') }}" alt="View">
-          <span>View</span>
-        </a>
-      </div>
-    </div>
-  </div>
+  {% endfor %}
+</div>
+
 </section>
 
 <!-- Modal Overlay and Popup -->
@@ -208,5 +101,4 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
-
 {% endblock %}

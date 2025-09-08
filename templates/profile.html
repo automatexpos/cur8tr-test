@@ -18,10 +18,10 @@
     border: 4px solid #000000;
     box-shadow: 4px 6px 0px #000000;
     border-radius: 110px;
-    color: #2C2C2E;
+    color: #000000;
     font-size: 1rem;
     font-family: 'Barlow', sans-serif;
-    font-weight: 700;
+    font-weight: 800;
     cursor: pointer;
     white-space: nowrap;
     outline: none;
@@ -30,7 +30,69 @@
     min-width: 0;
     transition: background 0.2s, transform 0.2s;
     margin-left: auto;
-    
+}
+.frame29-profile-name {
+    font-family: "Barlow", sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    margin: 0;
+    color: #000000;
+    line-height: 1.2;
+    text-transform: capitalize;
+}
+.frame29-profile-member {
+    font-family: "Barlow", sans-serif;
+    white-space: nowrap;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #000000;
+    opacity: 0.8;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.frame29-profile-share {
+    font-family: "Barlow", sans-serif;  
+    flex: none;
+    order: 2;
+    align-self: stretch;
+    flex-grow: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+/* Copy link button */
+.frame48-btn-copy {
+    background: #B5B0D8;
+    max-width: 214px;
+    width: 100%;
+    color: #000000;
+    font-size: 1rem;
+    font-weight: 800;
+    font-family: 'Barlow', sans-serif;
+    padding: 10px 24px;
+    border: 2px solid #000;
+    border-radius: 110px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    text-decoration: none;
+    outline: none;
+    box-shadow: 7px 8px 0px #000000;
+    appearance: none;
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    min-width: 0;
+}
+.frame48-btn-copy:hover {
+    background: #B3E0DD;
+    transform: translateY(-2px);
+}
+.frame48-btn-copy:active {
+    transform: translateY(0);
+    background: #A0D6D2;
 }
 @media (max-width: 1400px) {
     .frame29-share-btn-responsive {
@@ -63,6 +125,7 @@
     }
 }
 </style>
+
 <!-- Frame 8 Container -->
 <div class="frame8-profile-container">
 
@@ -85,63 +148,43 @@
         </div>
     </div>
         <div style="display: flex; flex-direction: row; gap: 16px; width: 100%; flex-wrap: wrap;">
-                        <a href="javascript:void(0);"
-                                 onclick="shareProfile('{{ profile.name }}', '{{ url_for('view_profile', slug=profile.slug, _external=True) }}', '{{ profile.bio[:100] if profile.bio else '' }}')"
-                                 class="frame29-share-btn-responsive"
-                                 onmouseover="this.style.background='#B3E0DD';this.style.transform='translateY(-2px)'"
-                                 onmouseout="this.style.background='#B5B0D8';this.style.transform='none'">
-                                        <img src="{{ url_for('static', filename='svg/arrow_right.svg') }}" alt="Share" style="width:20px;height:20px;vertical-align:middle;">
-                                        Share Profile
-                        </a>
-                        {% if session.user_id and session.user_id != profile.user_id %}
-                            <div class="frame29-profile-follow" style="margin:0;">
-                                {% set current_user = get_current_user() %}
-                                {% if current_user and current_user.is_following(profile.user) %}
-                                    <form method="POST" action="{{ url_for('unfollow_user', user_id=profile.user_id) }}" style="margin: 0;">
-                                        <button type="submit"
-                                                        class="frame29-share-btn-responsive"
-                                                        onmouseover="this.style.background='#B3E0DD';this.style.transform='translateY(-2px)'"
-                                                        onmouseout="this.style.background='#B5B0D8';this.style.transform='none'">
-                                            <i class="fas fa-user-minus" style="margin-right:8px;"></i> Unfollow
-                                        </button>
-                                    </form>
-                                {% else %}
-                                    <form method="POST" action="{{ url_for('follow_user', user_id=profile.user_id) }}" style="margin: 0;">
-                                        <button type="submit"
-                                                        class="frame29-share-btn-responsive"
-                                                        onmouseover="this.style.background='#B3E0DD';this.style.transform='translateY(-2px)'"
-                                                        onmouseout="this.style.background='#B5B0D8';this.style.transform='none'">
-                                            <i class="fas fa-user-plus" style="margin-right:8px;"></i> Follow
-                                        </button>
-                                    </form>
-                                {% endif %}
-                            </div>
-                        {% endif %}
+            <a href="javascript:void(0);"
+                onclick="shareProfile('{{ profile.name }}', '{{ url_for('view_profile', slug=profile.slug, _external=True) }}', '{{ profile.bio[:100] if profile.bio else '' }}')"
+                class="frame29-share-btn-responsive"
+                onmouseover="this.style.background='#B3E0DD';this.style.transform='translateY(-2px)'"
+                onmouseout="this.style.background='#B5B0D8';this.style.transform='none'">
+                <img src="{{ url_for('static', filename='svg/arrow_right.svg') }}" alt="Share" style="width:20px;height:20px;vertical-align:middle;">
+                Share Profile
+            </a>
+            {% if session.user_id and session.user_id != profile.user_id %}
+                <div class="frame29-profile-follow" style="margin:0;">
+                    {% set current_user = get_current_user() %}
+                    {% if current_user and current_user.is_following(profile.user) %}
+                        <form method="POST" action="{{ url_for('unfollow_user', user_id=profile.user_id) }}" style="margin: 0;">
+                            <button type="submit"
+                                class="frame29-share-btn-responsive"
+                                onmouseover="this.style.background='#B3E0DD';this.style.transform='translateY(-2px)'"
+                                onmouseout="this.style.background='#B5B0D8';this.style.transform='none'">
+                                <i class="fas fa-user-minus" style="margin-right:8px;"></i> Unfollow
+                            </button>
+                        </form>
+                    {% else %}
+                        <form method="POST" action="{{ url_for('follow_user', user_id=profile.user_id) }}" style="margin: 0;">
+                            <button type="submit"
+                                class="frame29-share-btn-responsive"
+                                onmouseover="this.style.background='#B3E0DD';this.style.transform='translateY(-2px)'"
+                                onmouseout="this.style.background='#B5B0D8';this.style.transform='none'">
+                                <i class="fas fa-user-plus" style="margin-right:8px;"></i> Follow
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
+</div>
 
-    </div>
-        <!-- {% if session.user_id and session.user_id != profile.user_id %}
-            <div class="frame29-profile-follow">
-                {% set current_user = get_current_user() %}
-                {% if current_user and current_user.is_following(profile.user) %}
-                    <form method="POST" action="{{ url_for('unfollow_user', user_id=profile.user_id) }}">
-                        <button type="submit" class="frame29-aa-unfollow">
-                            <i class="fas fa-user-minus"></i> Unfollow
-                        </button>
-                    </form>
-                {% else %}
-                    <form method="POST" action="{{ url_for('follow_user', user_id=profile.user_id) }}">
-                        <button type="submit" class="frame29-aa-follow">
-                            <i class="fas fa-user-plus"></i> Follow
-                        </button>
-                    </form>
-                {% endif %}
-            </div>
-        {% endif %} -->
-    </div>
-
-    <!-- Frame 47 Remaining Content -->
-    {% set svg_map = {
+<!-- Frame 47 Remaining Content -->
+{% set svg_map = {
     'Apps': 'apps.svg',
     'Books': 'books.svg',
     'Food': 'food.svg',
@@ -149,13 +192,17 @@
     'Where To Stay': 'stay.svg',
     'YouTube Channels': 'youtube.svg'
 } %}
+
 <div class="frame47-profile-content">
     {% if categories %}
         <div class="frame39-profile-categories-row">
             {% for category in categories %}
+                {% set svg_file = svg_map.get(category.name, 'default.svg') %}
                 <div class="frame33-profile-category-card">
                     <div class="frame33-profile-category-title">
-                        <img src="{{ url_for('static', filename='svg/' ~ svg_map.get(category.name, 'default.svg')) }}" alt="{{ category.name }} icon" class="frame33-category-svg">
+                        <img src="{{ url_for('static', filename='svg/' ~ svg_file) }}"
+                             alt="{{ category.name }} icon"
+                             class="frame33-category-svg">
                         {{ category.name }}
                     </div>
                     {% if category.description %}
@@ -165,41 +212,126 @@
                     {% if recent_recs %}
                         <div>
                             {% for rec in recent_recs %}
-                                <div class="frame47-profile-recommendation-item">
-                                    {% if rec.image %}
-                                        <!-- <img src="{{ rec.image }}" alt="{{ rec.title }}" class="frame47-profile-recommendation-image"> -->
-                                    {% endif %}
+                                <div class="frame47-profile-recommendation-item">                             
                                     <div class="frame47-profile-recommendation-content">
-                                        <a href="{{ url_for('view_recommendation', profile_slug=profile.slug, category_slug=category.slug, rec_id=rec.id) }}" class="frame47-profile-recommendation-title">
+                                        <div class="frame33-profile-category-small-title">
+                                            <img src="{{ url_for('static', filename='svg/' ~ svg_file) }}"
+                                                alt="{{ category.name }} icon"
+                                                class="frame33-category-small-svg">
+                                                <span style="font-size:18px; font-weight:700; font-family:'Barlow',sans-serif; color:#222; margin-left:6px;">
+                                                    {{ category.name }}
+                                                </span>                                            
+                                                {% if rec.rating %}
+                                            <span style="display:inline-flex; align-items:right; margin-left: auto;margin-right: 20px; gap:2px; white-space:nowrap;">
+                                                {% for i in range(rec.rating) %}
+                                                    <img src="{{ url_for('static', filename='svg/like.svg') }}" alt="Like" style="width:27px;height:27px;">
+                                                {% endfor %}
+                                                {% for i in range(5 - rec.rating) %}
+                                                    <!-- <img src="{{ url_for('static', filename='svg/like-empty.svg') }}" alt="Like Empty" style="width:16px;height:16px;"> -->
+                                                {% endfor %}
+                                            </span>
+
+                                            <!-- Rating text -->
+                                            <span style="font-size:0.9rem; font-weight:600; margin-right:12px; color:#444; white-space:nowrap;">
+                                                {% if rec.rating == 5 %}
+                                                {% elif rec.rating == 4 %}
+                                                {% elif rec.rating == 3 %}
+                                                {% elif rec.rating == 2 %}
+                                                {% else %}
+                                                {% endif %}
+                                            </span>
+                                            {% endif %}                                            
+                                        </div>                                             
+                                        <div style="display:flex; align-items:center; white-space:nowrap;">
+                                            <a href="{{ url_for('view_recommendation', profile_slug=profile.slug, category_slug=category.slug, rec_id=rec.id) }}" 
+                                            class="frame47-profile-recommendation-title" 
+                                            style="text-decoration:none; font-weight:800; color:#000;">
                                             {{ rec.title }}
-                                        </a>
-                                        <div class="frame47-profile-recommendation-meta">
-                                            {% if rec.rating %}
-                                                <span>
-                                                    {% for i in range(rec.rating) %}
-                                                        <img src="{{ url_for('static', filename='svg/star.svg') }}" alt="Star" class="rec-star-svg">
-                                                    {% endfor %}
-                                                    {% for i in range(5 - rec.rating) %}
-                                                        <img src="{{ url_for('static', filename='svg/star_empty.svg') }}" alt="Star" class="rec-star-svg">
-                                                    {% endfor %}
-                                                    <span class="frame47-profile-recommendation-rating-value">({{ rec.rating }}/5)</span>
+                                            </a>
+                                            {% if rec.cost_rating %}
+                                                <span style="margin-left:auto; margin-right: 20px; display:inline-flex; align-items:center; gap:6px; white-space:nowrap;">
+                                                    <img src="{{ url_for('static', filename='svg/dollar-circle.svg') }}" alt="Cost" style="width:22px;height:22px;">
+                                                    {% if rec.cost_rating == '$' %}
+                                                        Budget Friendly
+                                                    {% elif rec.cost_rating == '$$' %}
+                                                        Moderate
+                                                    {% elif rec.cost_rating == '$$$' %}
+                                                        Expensive
+                                                    {% elif rec.cost_rating == '$$$$' %}
+                                                        Premium/Luxury
+                                                    {% else %}
+                                                        Budget Friendly
+                                                    {% endif %}
                                                 </span>
                                             {% endif %}
-                                            {% if rec.cost_rating %}
-                                                <span class="frame47-profile-recommendation-cost">{{ rec.cost_rating }}</span>
-                                            {% endif %}
+                                        </div>
+                                                    
+                                        <div class="frame47-profile-recommendation-meta">
+
+
                                         </div>
                                         {% if rec.description %}
                                             <div class="frame47-profile-recommendation-desc">{{ rec.description[:80] }}{% if rec.description|length > 80 %}...{% endif %}</div>
                                         {% endif %}
                                         <div class="frame33-profile-category-actions">
-                                            <a href="{{ url_for('view_recommendation', profile_slug=profile.slug, category_slug=category.slug, rec_id=rec.id) }}" class="frame33-profile-category-action-btn">
-                                                <i class="fas fa-info-circle"></i> Details
-                                            </a>
+                                        <a href="{{ url_for('view_recommendation', profile_slug=profile.slug, category_slug=category.slug, rec_id=rec.id) }}"
+                                        class="frame33-profile-category-action-btn"
+                                        style="
+                                            text-decoration: none;
+                                            font-family: 'Barlow', sans-serif;
+                                            display: inline-flex;
+                                            align-items: center;
+                                            gap: 6px;
+                                            max-width: 160px;
+                                            width:100%;
+                                            height:56px;
+                                            font-weight: 800;
+                                            font-size: 1rem;
+                                            color: #000;
+                                            justify-content: center;
+                                            border-radius: 40px;
+                                            background: #fff;
+                                            border: 2px solid #000;
+                                            box-sizing: border-box;
+                                            transition: background 0.2s;
+                                            overflow: hidden;
+                                            white-space: nowrap;
+                                            border: 4px solid #000;
+
+                                        ">
+                                            <img src="{{ url_for('static', filename='svg/info-circle.svg') }}" alt="Details" style="width:18px;height:18px;vertical-align:middle;">
+                                            Details
+                                        </a>
                                             {% if rec.url %}
-                                                <a href="{{ rec.url }}" target="_blank" rel="noopener" class="frame33-profile-category-action-btn">
-                                                    <i class="fas fa-external-link-alt"></i> Visit
-                                                </a>
+                                            <a href="{{ rec.url }}" target="_blank" rel="noopener" class="frame33-profile-category-action-btn"
+                                            style="
+                                                text-decoration: none;
+                                                font-family: 'Barlow', sans-serif;
+                                                display: inline-flex;
+                                                align-items: center;
+                                                gap: 6px;
+                                                max-width: 120px;
+                                                width:100%;
+                                                height:56px;
+                                                justify-content: center;
+
+                                                font-weight: 800;
+                                                font-size: 1rem;
+                                                color: #000;
+                                                border-radius: 40px;
+                                                background: #ECBED9;
+                                                border: 2px solid #000;
+                                                box-sizing: border-box;
+                                                transition: background 0.2s;
+                                                overflow: hidden;
+                                                white-space: nowrap;
+                                                border: 4px solid #000;
+                                                border-radius: 26px;
+                                                box-shadow: 7px 8px 0px #000;                                                
+                                            ">
+                                                <img src="{{ url_for('static', filename='svg/globe-earth.svg') }}" alt="Visit" style="width:18px;height:18px;vertical-align:middle;">
+                                                Visit
+                                            </a>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -219,7 +351,6 @@
                 </div>
             {% endfor %}
         </div>
-        </div>    
     {% else %}
         <div class="frame47-profile-section">
             <div style="font-size: 3rem; margin-bottom: 1rem;">
@@ -234,7 +365,7 @@
     {% endif %}
 </div>
 
-    <!-- Frame 48 Share Section -->
+<!-- Frame 48 Share Section -->
 <div class="frame48-share-profile"
      style="
         display: flex;
@@ -254,106 +385,70 @@
         box-sizing: border-box;
         flex-wrap: wrap;
      ">
-    <div class="frame48-share-header"
-         style="
-            font-size: 1.4rem;
-            font-weight: 900;
-            color: #2C2C2E;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-            word-break: break-word;
-            text-align: left;
-            width: 100%;
-            min-width: 0;
-            box-sizing: border-box;
-         ">
-        <span class="frame48-share-title"
-              style="
-                font-size: 1.4rem;
-                font-weight: 900;
-                color: #2C2C2E;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                flex-wrap: wrap;
-                word-break: break-word;
+    <div class="frame48-share-link-row"
+        style="
+          display: flex;
+          align-items: center;
+          font-weight:800;
+          gap: 20px;
+          width: 100%;
+          justify-content: left;
+        ">
+       <span class="frame48-share-title"
+            style="
+             font-family: 'Barlow', sans-serif;
+             font-weight:800;
+             font-size: 1.4rem;
+             font-weight: 900;
+             color: #000000;
+             display: flex;
+             align-items: center;
+             gap: 10px;
+             flex-wrap: wrap;
+             word-break: break-word;
+             text-align: left;
+             min-width: 0;
+             box-sizing: border-box;
+             white-space: nowrap;
+            ">
+          Share this profile with others
+       </span>
+
+       <!-- Input with inline SVG background -->
+       <input type="text"
+            class="frame48-share-link"
+            value="{{ url_for('view_profile', slug=profile.slug, _external=True) }}"
+            readonly
+            onclick="this.select()"
+            style="
+                max-width: 438px;
+                flex: 1;
+                border-radius: 110px;
+                border: 2px solid #000;
+                padding: 10px 18px 10px 40px;
+                font-size: 1rem;
+                font-family: 'Barlow', sans-serif;
+                font-weight: 800;
+                background: #fff url('{{ url_for('static', filename='svg/location-pin.svg') }}') no-repeat 12px center;
+                background-size: 18px 18px;
+                color: #000000;
                 text-align: left;
-                width: 100%;
+                outline: none;
                 min-width: 0;
                 box-sizing: border-box;
-              ">
-            Share this profile with others
-        </span>
+            ">
+
+        <button type="button"
+                class="frame48-btn-copy"
+                onclick="copyToClipboard('{{ url_for('view_profile', slug=profile.slug, _external=True) }}', this)">
+            <img src="{{ url_for('static', filename='svg/copy-alt.svg') }}"
+                alt="Copy"
+                class="frame48-copy-svg"
+                style="width: 18px; height: 18px; vertical-align: middle;">
+            Copy Link
+        </button>
     </div>
-    <div class="frame48-share-content"
-         style="
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            align-items: flex-start;
-            justify-content: center;
-         ">
-        <div class="frame48-share-link-row"
-             style="
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                width: 100%;
-             ">
-            <input type="text"
-                   class="frame48-share-link"
-                   value="{{ url_for('view_profile', slug=profile.slug, _external=True) }}"
-                   readonly
-                   onclick="this.select()"
-                   style="
-                        flex: 1;
-                        border-radius: 12px;
-                        border: 2px solid #000;
-                        padding: 10px 18px;
-                        font-size: 1rem;
-                        font-family: monospace;
-                        background: #fff;
-                        color: #2C2C2E;
-                        text-align: center;
-                        outline: none;
-                        min-width: 0;
-                        box-sizing: border-box;
-                   ">
-            <a href="javascript:void(0);"
-               class="frame48-btn-copy"
-               onclick="copyToClipboard(this)"
-               style="
-                    background: #fff;
-                    color: #2C2C2E;
-                    font-size: 1rem;
-                    font-weight: 700;
-                    padding: 10px 24px;
-                    border: 2px solid #000;
-                    border-radius: 110px;
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 8px;
-                    cursor: pointer;
-                    transition: background 0.2s;
-                    text-decoration: none;
-                    outline: none;
-                    box-shadow: none;
-                    appearance: none;
-                    -webkit-appearance: none;
-                    box-sizing: border-box;
-                    min-width: 0;
-               ">
-                <img src="{{ url_for('static', filename='svg/copy-alt.svg') }}"
-                     alt="Copy"
-                     class="frame48-copy-svg"
-                     style="width: 18px; height: 18px; vertical-align: middle;">
-                Copy Link
-            </a>
-        </div>
-    </div>
+
     <style>
     @media (max-width: 768px) {
         .frame48-share-profile {
@@ -382,40 +477,50 @@
         }
         .frame48-share-link {
             font-size: 0.95rem !important;
-            padding: 8px 8px !important;
+            padding: 8px 8px 8px 36px !important;
             border-radius: 7px !important;
             width: 100% !important;
             min-width: 0 !important;
             box-sizing: border-box !important;
         }
-        .frame48-btn-copy {
-            width: 100% !important;
-            font-size: 0.95rem !important;
-            padding: 10px 0 !important;
-            border-radius: 40px !important;
-            justify-content: center !important;
-        }
     }
     </style>
 </div>
-</div>
 
-</div>
-{% endblock %}
-
-{% block scripts %}
 <script>
-function copyToClipboard(btn) {
-    const input = btn.parentElement.querySelector('.frame48-share-link');
-    input.select();
-    document.execCommand('copy');
-    btn.classList.add('copied');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = '<img src="{{ url_for('static', filename='svg/copy-check.svg') }}" alt="Copied" class="frame48-copy-svg"> Copied!';
-    setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.classList.remove('copied');
-    }, 2000);
+const copyIconUrl = "{{ url_for('static', filename='svg/copy-alt.svg') }}";
+
+function copyToClipboard(text, btn) {
+    if (!text) return;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            showCopied(btn);
+        }).catch(() => {
+            fallbackCopy(text, btn);
+        });
+    } else {
+        fallbackCopy(text, btn);
+    }
+}
+
+function fallbackCopy(text, btn) {
+    const temp = document.createElement("textarea");
+    temp.value = text;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand("copy");
+    document.body.removeChild(temp);
+
+    showCopied(btn);
+}
+
+function showCopied(btn) {
+    btn.innerHTML = "<img src='" + copyIconUrl + "' style='width:18px;height:18px;vertical-align:middle;'> Copied!";
+    setTimeout(function() {
+        btn.innerHTML = "<img src='" + copyIconUrl + "' style='width:18px;height:18px;vertical-align:middle;'> Copy Link";
+    }, 1200);
 }
 </script>
+
 {% endblock %}

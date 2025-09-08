@@ -308,7 +308,7 @@ body.cur8tr-recs-bg header.main-header {
                 <!-- Top Row: Category Tag (left) & Rating (right) -->
                 <div class="cur8tr-rec-card-toprow">
                     <span class="cur8tr-rec-card-cat-tag">
-                        <img src="{{ url_for('static', filename='svg/' ~ category_svg_map.get(rec.category.name, 'category.svg')) }}" alt="{{ rec.category.name }}" class="cur8tr-rec-card-cat-svg">
+                        <img src="{{ url_for('static', filename='svg/' ~ category_svg_map.get(rec.category.name, 'default.svg')) }}" alt="{{ rec.category.name }}" class="cur8tr-rec-card-cat-svg">
                         {{ rec.category.name }}
                     </span>
                     <span class="cur8tr-rec-card-rating">

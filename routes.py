@@ -506,6 +506,7 @@ def register_routes(app, db):
         # Check if user has default categories, if not create them
         default_category_names = ["Books", "YouTube Channels", "I Recommend Following", "Food", "Where To Stay", "Apps", "Products"]
         existing_categories = Category.query.filter_by(profile_id=profile.id).all()
+        
         existing_names = [cat.name for cat in existing_categories]
         
         # Create missing default categories
@@ -517,6 +518,11 @@ def register_routes(app, db):
                 flash(f'Added {len(missing_defaults)} default categories to your profile!', 'success')
         
         categories = Category.query.filter_by(profile_id=profile.id).order_by(Category.name).all()
+        
+        # Add total recommendations count for each category
+        for category in categories:
+            category.count = Recommendation.query.filter_by(category_id=category.id).count()
+        
         return render_template('dashboard/categories.html', categories=categories, profile=profile)
 
     @app.route('/dashboard/categories/new', methods=['GET', 'POST'])
