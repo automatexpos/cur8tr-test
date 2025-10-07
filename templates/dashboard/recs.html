@@ -347,10 +347,10 @@ body.cur8tr-recs-bg header.main-header {
                 {% endif %}
                 <!-- Tags: Category and Collection -->
                 <div class="cur8tr-rec-card-tags-row">
-                    {% for tag in rec.tags.get('categories', []) %}
+                    {% for tag in rec.safe_tags.get('categories', []) %}
                         <span class="cur8tr-rec-card-tag">{{ tag }}</span>
                     {% endfor %}
-                    {% for tag in rec.tags.get('collections', []) %}
+                    {% for tag in rec.safe_tags.get('collections', []) %}
                         <span class="cur8tr-rec-card-tag collection">{{ tag }}</span>
                     {% endfor %}
                 </div>

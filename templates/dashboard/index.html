@@ -151,10 +151,10 @@
             </span>
           </div>
           <div class="recent-recommendation-tags">
-            {% for tag in rec.tags.get('categories', []) %}
+            {% for tag in rec.safe_tags.get('categories', []) %}
               <span class="recent-recommendation-tag-category">{{ tag }}</span>
             {% endfor %}
-            {% for tag in rec.tags.get('collections', []) %}
+            {% for tag in rec.safe_tags.get('collections', []) %}
               <span class="recent-recommendation-tag-collection">{{ tag }}</span>
             {% endfor %}
           </div>

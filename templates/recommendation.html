@@ -2,18 +2,25 @@
 
 {% block title %}{{ recommendation.title }} - {{ category.name }} - {{ profile.name }} - CUR8tr{% endblock %}
 
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/recommendation-page-clean.css') }}">
+<style>
+.main-header {
+    background: #B3E0DD !important;
+}
+</style>
+{% endblock %}
+
 {% block content %}
     <!-- Main Recommendation Card -->
     <div class="frame8-recommendation-window">
         <div class="frame8-recommendation-window-title">YOUR RECOMMENDATION</div>
-        <div class="frame8-recommendation-header">
-            <span class="frame8-recommendation-title">{{ recommendation.title }}</span>
-        </div>
         <div class="frame8-recommendation-content">
             {% if recommendation.image %}
                 <img src="{{ recommendation.image }}" alt="{{ recommendation.title }}" class="frame8-recommendation-image">
             {% endif %}
             <div class="frame8-recommendation-details">
+                <!-- First row: Category name (left) and Rating (right) -->
                 <div class="frame8-recommendation-meta-row">
                     <span class="frame8-recommendation-category">
                         <i class="fas fa-folder"></i> {{ category.name }}
@@ -21,67 +28,63 @@
                     {% if recommendation.rating %}
                         <span class="frame8-recommendation-rating">
                             {% for i in range(recommendation.rating) %}👍{% endfor %}
-                            <span class="rating-value">({{ recommendation.rating }}/5)</span>
-                        </span>
-                    {% endif %}
-                    {% if recommendation.cost_rating %}
-                        <span class="frame8-recommendation-cost">
-                            <i class="fas fa-dollar-sign"></i> {{ recommendation.cost_rating }}
                         </span>
                     {% endif %}
                 </div>
+                
+                <!-- Second row: Title (left) and Cost Rating (right) -->
+                <div class="frame8-recommendation-title-row">
+                    <span class="frame8-recommendation-title">{{ recommendation.title }}</span>
+                    {% if recommendation.cost_rating %}
+                        <span class="frame8-recommendation-cost">
+                            <img src="{{ url_for('static', filename='svg/dollar-circle.svg') }}" alt="Cost" style="width: 18px; height: 18px;"> {% if recommendation.cost_rating == '$' %}Budget Friendly
+                            {% elif recommendation.cost_rating == '$$' %}Moderate
+                            {% elif recommendation.cost_rating == '$$$' %}Expensive
+                            {% elif recommendation.cost_rating == '$$$$' %}Premium/Luxury
+                            {% else %}Budget Friendly
+                            {% endif %}
+                        </span>
+                    {% endif %}
+                </div>
+                
                 <div class="frame8-recommendation-description">
                     {{ recommendation.description }}
                 </div>
                 {% if recommendation.pro_tip %}
                     <div class="frame8-recommendation-protip">
-                        <span class="frame8-recommendation-protip-label">💡 Pro Tip:</span>
+                        <div class="frame8-tip-icon-container">
+                            <img src="{{ url_for('static', filename='svg/bulb.svg') }}" alt="Pro Tip" style="width: 24px; height: 24px;">
+                        </div>
+                        <span class="frame8-recommendation-protip-label">Pro Tip:</span>
                         <span>{{ recommendation.pro_tip }}</span>
                     </div>
                 {% endif %}
-                {% if recommendation.url %}
-                    <div>
-                        <!-- <span style="font-weight: bold; font-size: 12px;">Link:</span> -->
-                        <a href="{{ recommendation.url }}" target="_blank" rel="noopener" class="frame8-btn-primary" style="margin-left: 8px;">
-                            <i class="fas fa-link"></i> Visit Link
+
+                <!-- Action Buttons for Visit Link and Maps - Right after Pro Tip -->
+                <div class="frame8-recommendation-actions-top">
+                    {% if recommendation.url %}
+                        <a href="{{ recommendation.url }}" target="_blank" rel="noopener" class="frame8-btn-primary">
+                            <img src="{{ url_for('static', filename='svg/globe-earth.svg') }}" alt="Visit" style="width: 18px; height: 18px;"> Visit Link
                         </a>
-                    </div>
-                {% endif %}
-                {% if recommendation.location %}
-                    <div class="frame8-recommendation-location">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <!-- <span>{{ recommendation.location }}</span> -->
+                    {% endif %}
+                    {% if recommendation.location %}
                         <a href="{{ recommendation.get_google_maps_link() }}" target="_blank" rel="noopener" class="frame8-btn-primary">
-                            View on Google Maps
+                            <img src="{{ url_for('static', filename='svg/map-location.svg') }}" alt="Maps" style="width: 18px; height: 18px;"> View on Google Maps
                         </a>
-                    </div>
-                {% endif %}
-                {% if recommendation.tags %}
+                    {% endif %}
+                </div>
+
+                {% if recommendation.safe_tags.get('categories') or recommendation.safe_tags.get('collections') %}
                     <div class="frame8-recommendation-tags">
-                        {% for tag in recommendation.tags.get('categories', []) %}
+                        {% for tag in recommendation.safe_tags.get('categories', []) %}
                             <span class="frame8-tag-category">{{ tag }}</span>
                         {% endfor %}
-                        {% for tag in recommendation.tags.get('collections', []) %}
+                        {% for tag in recommendation.safe_tags.get('collections', []) %}
                             <span class="frame8-tag-collection">{{ tag }}</span>
                         {% endfor %}
                     </div>
                 {% endif %}
             </div>
-        </div>
-
-        <!-- Actions -->
-        <div class="frame8-recommendation-actions">
-            <form id="like-form" method="POST" action="{{ url_for('like_recommendation', profile_slug=profile.slug, category_slug=category.slug, rec_id=recommendation.id) }}">
-                <button type="submit" id="like-button" class="frame8-btn-like {% if recommendation.is_liked_by(current_user) %}liked{% endif %}">
-                    <img src="{{ url_for('static', filename='svg/heart.svg') }}" alt="Like" class="frame8-like-svg">
-                    <span id="like-count">{{ recommendation.get_like_count() }}</span>
-                    {% if recommendation.is_liked_by(current_user) %}Unlike{% else %}Like{% endif %}
-                </button>
-            </form>
-            <button onclick="shareRecommendation('{{ recommendation.title }}', '{{ url_for('view_recommendation', profile_slug=profile.slug, category_slug=category.slug, rec_id=recommendation.id, _external=True) }}')" class="frame8-btn-share">
-                <img src="{{ url_for('static', filename='svg/arrow_right.svg') }}" alt="Share" class="frame8-share-svg">
-                Share
-            </button>
         </div>
 
         <!-- Likes List -->
@@ -102,22 +105,34 @@
             </div>
         {% endif %}
 
-        <!-- Comments Section -->
-        <div class="frame8-recommendation-comments">
-            <div class="frame8-comments-title">
-                <i class="fas fa-comments"></i> Comments ({{ recommendation.comments|length }})
+        <!-- Comments Section with Social Actions -->
+        <div class="frame8-comments-header">
+            <h3 class="frame8-comments-title">Comments ({{ recommendation.comments|length }})</h3>
+            <div class="frame8-recommendation-actions">
+                <form id="like-form" method="POST" action="{{ url_for('like_recommendation', profile_slug=profile.slug, category_slug=category.slug, rec_id=recommendation.id) }}">
+                    <button type="submit" id="like-button" class="frame8-btn-like {% if recommendation.is_liked_by(current_user) %}liked{% endif %}">
+                        <img src="{{ url_for('static', filename='svg/heart.svg') }}" alt="Like" style="width: 18px; height: 18px;">
+                        <span id="like-count">{{ recommendation.get_like_count() }}</span> Likes
+                    </button>
+                </form>
+                <button onclick="shareRecommendation('{{ recommendation.title }}', '{{ url_for('view_recommendation', profile_slug=profile.slug, category_slug=category.slug, rec_id=recommendation.id, _external=True) }}')" class="frame8-btn-share">
+                    <img src="{{ url_for('static', filename='svg/arrow_right.svg') }}" alt="Share" style="width: 18px; height: 18px;"> Share
+                </button>
             </div>
+        </div>
+        
+        <div class="frame8-recommendation-comments">
             {% if current_user %}
                 <form method="POST" class="frame8-comment-form">
                     {{ comment_form.hidden_tag() }}
-                    {{ comment_form.content(class="frame8-form-control", placeholder="Add a comment...") }}
+                    {{ comment_form.content(class="frame8-comment-input", placeholder="Add a comment...") }}
                     {% if comment_form.content.errors %}
                         <div style="color: red; font-size: 12px; margin-top: 4px;">
                             {% for error in comment_form.content.errors %}{{ error }}{% endfor %}
                         </div>
                     {% endif %}
-                    <button type="submit" class="frame8-btn-primary">
-                        <i class="fas fa-paper-plane"></i> Post Comment
+                    <button type="submit" class="frame8-comment-submit">
+                        <img src="{{ url_for('static', filename='svg/check.svg') }}" alt="Post" style="width: 18px; height: 18px;"> Post Comment
                     </button>
                 </form>
             {% else %}
@@ -148,23 +163,24 @@
                 </div>
             {% else %}
                 <div class="frame8-no-comments">
-                    <i class="fas fa-comment-slash"></i> No comments yet. Be the first!
+                    No Comments Yet. Be The First!
                 </div>
             {% endif %}
         </div>
-
-        <!-- Footer -->
-        <div class="frame8-recommendation-footer">
-            <span><i class="fas fa-calendar"></i> Added {{ recommendation.created_at.strftime('%b %d, %Y %I:%M %p') }}</span>
-            <div>
-                <a href="{{ url_for('view_category', profile_slug=profile.slug, category_slug=category.slug) }}" class="frame8-btn-secondary">
-                    <i class="fas fa-arrow-left"></i> Back to {{ category.name }}
-                </a>
-                <a href="{{ url_for('view_profile', slug=profile.slug) }}" class="frame8-btn-secondary">
-                    <i class="fas fa-user"></i> {{ profile.name }}'s Profile
-                </a>
-            </div>
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <div class="frame8-bottom-nav">
+        <a href="{{ url_for('view_category', profile_slug=profile.slug, category_slug=category.slug) }}" class="frame8-nav-back">
+            <span>←</span> Back to {{ category.name }}
+        </a>
+        <div class="frame8-nav-date">
+            Added {{ recommendation.created_at.strftime('%b %d, %Y @ %I:%M %p') }}
         </div>
+        <a href="{{ url_for('view_profile', slug=profile.slug) }}" class="frame8-nav-profile">
+            <span>👤</span> {{ profile.name }}'s Profile
+        </a>
+    </div>
     </div>
 <!-- </div> -->
 

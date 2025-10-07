@@ -677,8 +677,8 @@ def register_routes(app, db):
                     from models import slugify
                     tags_data['collections'] = [slugify(tag) for tag in collection_tags]
             
-            if tags_data:
-                recommendation.tags = tags_data
+            # Always set tags, even if empty
+            recommendation.tags = tags_data if tags_data else {}
             
             db.session.add(recommendation)
             db.session.commit()
@@ -730,7 +730,8 @@ def register_routes(app, db):
                     from models import slugify
                     tags_data['collections'] = [slugify(tag) for tag in collection_tags]
             
-            recommendation.tags = tags_data if tags_data else None
+            # Always set tags, even if empty
+            recommendation.tags = tags_data if tags_data else {}
             
             db.session.commit()
             flash('Recommendation updated successfully!', 'success')

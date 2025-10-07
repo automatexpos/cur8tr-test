@@ -131,6 +131,11 @@ class Recommendation(db.Model):
         encoded_location = urllib.parse.quote(self.location)
         return f"https://www.google.com/maps/search/{encoded_location}"
     
+    @property
+    def safe_tags(self):
+        """Get tags as a dictionary, ensuring it's never None"""
+        return self.tags if self.tags is not None else {}
+    
     def get_tags(self):
         """Get tags as a simple list combining categories and collections"""
         if not self.tags:
