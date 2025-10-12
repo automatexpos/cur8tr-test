@@ -532,20 +532,46 @@ a[href*="google.com/maps"] {
     box-shadow: 4px 4px 0px #000000;
 }
 
-/* Responsive Design */
+/* Enhanced Responsive Design */
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 16px;
+    }
+    
+    .frame8-recommendation-window {
+        margin: 15px auto;
+        padding: 30px;
+        max-width: 100%;
+    }
+    
+    .frame8-recommendation-content {
+        gap: 20px;
+    }
+    
+    .frame8-recommendation-image {
+        height: 300px;
+    }
+}
+
 @media (max-width: 768px) {
     body {
         padding: 10px;
+    }
+    
+    .container {
+        padding: 0 8px;
     }
     
     .frame8-recommendation-window {
         margin: 10px auto;
         padding: 20px;
         border-radius: 20px;
+        gap: 16px;
     }
     
     .frame8-recommendation-window-title {
         font-size: 22px;
+        text-align: center;
     }
     
     .frame8-recommendation-content {
@@ -563,16 +589,19 @@ a[href*="google.com/maps"] {
         flex-direction: column;
         gap: 10px;
         align-items: flex-start;
+        text-align: left;
     }
     
     .frame8-recommendation-actions-top {
         flex-direction: column;
-        gap: 10px;
+        gap: 12px;
+        align-items: stretch;
     }
     
     .frame8-recommendation-actions {
         justify-content: center;
         gap: 10px;
+        flex-wrap: wrap;
     }
     
     .frame8-btn-like,
@@ -580,6 +609,7 @@ a[href*="google.com/maps"] {
     .frame8-btn-primary {
         flex: 1;
         justify-content: center;
+        min-width: 120px;
     }
     
     .frame8-bottom-nav {
@@ -592,5 +622,98 @@ a[href*="google.com/maps"] {
     .frame8-nav-profile {
         width: 100%;
         justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 8px;
+    }
+    
+    .frame8-recommendation-window {
+        margin: 8px auto;
+        padding: 16px;
+        border-radius: 18px;
+        gap: 14px;
+    }
+    
+    .frame8-recommendation-window-title {
+        font-size: 20px;
+    }
+    
+    .frame8-recommendation-content {
+        gap: 16px;
+    }
+    
+    .frame8-recommendation-image {
+        height: 200px;
+        border-radius: 15px;
+    }
+    
+    .frame8-recommendation-meta-row,
+    .frame8-recommendation-title-row {
+        gap: 8px;
+    }
+    
+    .frame8-recommendation-actions {
+        gap: 8px;
+    }
+    
+    .frame8-btn-like,
+    .frame8-btn-share,
+    .frame8-btn-primary {
+        padding: 8px 12px;
+        font-size: 14px;
+        height: 40px;
+    }
+    
+    .frame8-bottom-nav {
+        gap: 12px;
+        margin-top: 16px;
+    }
+    
+    .frame8-nav-back,
+    .frame8-nav-profile {
+        padding: 8px 16px;
+        font-size: 14px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 390px) {
+    body {
+        padding: 6px;
+    }
+    
+    .frame8-recommendation-window {
+        margin: 6px auto;
+        padding: 12px;
+        border-radius: 16px;
+        gap: 12px;
+    }
+    
+    .frame8-recommendation-window-title {
+        font-size: 18px;
+    }
+    
+    .frame8-recommendation-image {
+        height: 180px;
+        border-radius: 12px;
+    }
+    
+    .frame8-btn-like,
+    .frame8-btn-share,
+    .frame8-btn-primary {
+        padding: 6px 10px;
+        font-size: 12px;
+        height: 36px;
+        min-width: 100px;
+    }
+    
+    .frame8-nav-back,
+    .frame8-nav-profile {
+        padding: 6px 12px;
+        font-size: 12px;
+        height: 36px;
     }
 }
