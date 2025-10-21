@@ -112,10 +112,10 @@ def register_routes(app, db):
         ).outerjoin(Like).group_by(Recommendation.id).order_by(
             db.func.count(Like.id).desc(),
             Recommendation.created_at.desc()
-        ).limit(3).all()
+        ).limit(4).all()
         
         # If not enough tips from current month, get from all time
-        if len(popular_pro_tips) < 3:
+        if len(popular_pro_tips) < 4:
             popular_pro_tips = db.session.query(Recommendation).join(Category).join(Profile).filter(
                 Profile.is_public == True,
                 Recommendation.pro_tip != None,
@@ -123,7 +123,7 @@ def register_routes(app, db):
             ).outerjoin(Like).group_by(Recommendation.id).order_by(
                 db.func.count(Like.id).desc(),
                 Recommendation.created_at.desc()
-            ).limit(3).all()
+            ).limit(4).all()
         
         return render_template('home.html', 
                              profiles=profiles, 
