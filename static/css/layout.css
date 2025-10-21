@@ -3624,18 +3624,38 @@ select {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;   /* Add this line */
-  padding: 60px;
+  justify-content: center;
+  padding: 60px 20px;
   gap: 50px;
   position: relative;
-  width: 1320px;
-  height: 678px;
-  margin: 0 auto;            /* This centers the container horizontally */
+  width: 100%;
+  max-width: 1320px;
+  min-height: 678px;
+  height: auto;
+  margin: 0 auto;
   background: #FDF0F0;
   border: 4px solid #000;
   box-shadow: 9px 12px 0px #000;
   border-radius: 30px;
   box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .categories-dashboard {
+    padding: 30px 15px;
+    gap: 30px;
+    border-radius: 20px;
+    box-shadow: 6px 8px 0px #000;
+  }
+}
+
+@media (max-width: 480px) {
+  .categories-dashboard {
+    padding: 20px 10px;
+    gap: 20px;
+    border-radius: 15px;
+    box-shadow: 4px 6px 0px #000;
+  }
 }
 
 /* Header row */
@@ -3644,10 +3664,13 @@ select {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 1200px;
-  height: 56px;
+  width: 100%;
+  max-width: 1200px;
+  min-height: 56px;
+  height: auto;
   margin-bottom: 0;
-  gap: 10px;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
 /* Title */
@@ -3655,15 +3678,29 @@ select {
   font-family: 'Barlow', sans-serif;
   font-style: normal;
   font-weight: 800;
-  font-size: 42px;
-  line-height: 80px;
+  font-size: clamp(28px, 5vw, 42px);
+  line-height: 1.2;
   text-transform: uppercase;
   color: #000000;
-  width: 411px;
-  height: 29px;
+  max-width: 411px;
+  width: auto;
   display: flex;
   align-items: center;
   margin: 0;
+}
+
+@media (max-width: 768px) {
+  .categories-header-row {
+    gap: 15px;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .categories-title {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
 }
 
 /* Add Custom Category Button */
@@ -3671,21 +3708,37 @@ select {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 10px 30px;
+  padding: 10px 20px;
   gap: 10px;
-  width: 294px;
+  min-width: 200px;
+  max-width: 294px;
+  width: auto;
   height: 56px;
   background: #B3E0DD;
   border: 4px solid #000;
   border-radius: 110px;
   font-family: 'Barlow', sans-serif;
   font-weight: 800;
-  font-size: 20px;
+  font-size: clamp(16px, 4vw, 20px);
   color: #000;
   text-decoration: none;
   box-sizing: border-box;
   transition: box-shadow 0.2s;
   white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .categories-add-btn {
+    padding: 8px 15px;
+    height: 48px;
+    border-width: 3px;
+    border-radius: 80px;
+  }
+  
+  .categories-add-btn img {
+    width: 24px;
+    height: 24px;
+  }
 }
 .categories-add-btn:hover {
   background: #9ccfc9; /* ✅ darker shade of #B3E0DD */
@@ -3699,17 +3752,32 @@ select {
   margin-right: 8px;
 }
 
-/* Categories grid: 2 rows, 3 columns, 30px gap */
+/* Categories grid: responsive grid */
 .categories-grid {
   display: grid;
-  grid-template-columns: repeat(3, 380px);
-  grid-template-rows: repeat(2, 223px);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 30px;
-  width: 1200px;
-  height: 452px;
+  width: 100%;
+  max-width: 1200px;
+  height: auto;
   margin: 0 auto;
-  align-items: flex-start;
-  justify-content: start;
+  align-items: stretch;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .categories-grid {
+    gap: 20px;
+    padding: 0 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .categories-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 0 10px;
+  }
 }
 
 /* Category card */
@@ -3813,18 +3881,45 @@ select {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 10px 20px;
-  gap: 10px;
+  padding: 8px 15px;
+  gap: 8px;
   border-radius: 110px;
   font-family: 'Barlow', sans-serif;
   font-weight: 800;
-  font-size: 20px;
+  font-size: clamp(14px, 3vw, 20px);
   color: #000;
   text-decoration: none;
   border: 4px solid #000;
   box-sizing: border-box;
   transition: box-shadow 0.2s;
-  height: 46px;
+  min-height: 46px;
+  height: auto;
+  flex: 1;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .category-action-btn {
+    padding: 6px 12px;
+    border-width: 3px;
+    border-radius: 80px;
+    min-height: 40px;
+  }
+  
+  .category-action-btn img {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .category-card-actions {
+    flex-direction: column;
+  }
+  
+  .category-action-btn.add,
+  .category-action-btn.view {
+    width: 100%;
+  }
 }
 
 .category-action-btn.add {
