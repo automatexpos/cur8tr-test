@@ -48,15 +48,135 @@ def generate_qr_code(url, filename_prefix):
     
     return filename
 
-def send_verification_email(email, code):
+def send_verification_email(email, code, username=None):
     """
-    Send verification email (placeholder for actual email implementation)
-    In a real app, this would use a service like SendGrid, Mailgun, etc.
+    Send verification email using Gmail SMTP
     """
-    # For now, just log the verification code
+    import smtplib
+    import os
     import logging
-    logging.info(f"Verification code for {email}: {code}")
-    return True
+    from email.mime.text import MIMEText
+    from email.mime.multipart import MIMEMultipart
+    
+    try:
+        # Get email configuration from environment variables
+        smtp_server = "smtp.gmail.com"
+        smtp_port = 587
+        app_email = os.environ.get('APP_EMAIL')
+        app_password = os.environ.get('APP_PASSWORD')  # App-specific password
+        admin_email = os.environ.get('ADMIN_EMAIL')
+        
+        if not app_email or not app_password:
+            logging.error("Email configuration missing. Please set APP_EMAIL and APP_PASSWORD environment variables.")
+            return False
+        
+        # Create message
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = "Verify your Cur8tr account"
+        msg['From'] = "support@cur8tr.space"
+        msg['To'] = email
+        
+        # Create HTML email body
+        html_body = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Verify your Cur8tr account</title>
+        </head>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+                <h1 style="color: white; margin: 0; font-size: 28px;">Welcome to Cur8tr! 🎉</h1>
+            </div>
+            
+            <div style="background: #ffffff; padding: 40px; border-radius: 0 0 10px 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <p style="font-size: 18px; margin-bottom: 20px;">
+                    Hello{' ' + username if username else ''}! 👋
+                </p>
+                
+                <p style="font-size: 16px; margin-bottom: 30px;">
+                    Thanks for joining Cur8tr, the platform where you can discover and share amazing recommendations! 
+                    We're excited to have you in our community.
+                </p>
+                
+                <div style="text-align: center; margin: 40px 0;">
+                    <div style="background: #f8f9fa; border: 2px dashed #dee2e6; border-radius: 10px; padding: 30px; margin: 20px 0;">
+                        <p style="font-size: 16px; margin-bottom: 15px; color: #666;">
+                            Your verification code is:
+                        </p>
+                        <div style="font-size: 36px; font-weight: bold; color: #667eea; letter-spacing: 8px; font-family: 'Courier New', monospace;">
+                            {code}
+                        </div>
+                        <p style="font-size: 14px; color: #666; margin-top: 15px;">
+                            This code will expire in 10 minutes
+                        </p>
+                    </div>
+                </div>
+                
+                <p style="font-size: 16px; margin-bottom: 30px;">
+                    Simply enter this code on the verification page to complete your registration and start exploring 
+                    curated recommendations from our amazing community!
+                </p>
+                
+                <div style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; margin: 20px 0; border-radius: 4px;">
+                    <p style="margin: 0; font-size: 14px; color: #1976d2;">
+                        <strong>Security tip:</strong> Never share this code with anyone. We'll never ask for it over email or phone.
+                    </p>
+                </div>
+                
+                <p style="font-size: 14px; color: #666; margin-top: 30px;">
+                    If you didn't create this account, you can safely ignore this email.
+                </p>
+                
+                <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+                
+                <div style="text-align: center; color: #666; font-size: 14px;">
+                    <p>Happy curating! 🚀</p>
+                    <p><strong>The Cur8tr Team</strong></p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        # Create plain text version as fallback
+        text_body = f"""
+        Welcome to Cur8tr!
+        
+        Hello{' ' + username if username else ''}!
+        
+        Thanks for joining Cur8tr! To complete your registration, please use the verification code below:
+        
+        Verification Code: {code}
+        
+        This code will expire in 10 minutes.
+        
+        If you didn't create this account, you can safely ignore this email.
+        
+        Happy curating!
+        The Cur8tr Team
+        """
+        
+        # Attach parts
+        part1 = MIMEText(text_body, 'plain')
+        part2 = MIMEText(html_body, 'html')
+        msg.attach(part1)
+        msg.attach(part2)
+        
+        # Send email
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()
+        server.login(app_email, app_password)
+        server.send_message(msg)
+        server.quit()
+        
+        logging.info(f"Verification email sent successfully to {email}")
+        return True
+        
+    except Exception as e:
+        logging.error(f"Failed to send verification email to {email}: {str(e)}")
+        return False
 
 def format_url(url):
     """

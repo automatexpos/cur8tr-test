@@ -1,40 +1,66 @@
-/* Base.html */
-
-header.navbar {
-  background: var(--color-bg);
-  box-shadow: var(--shadow-sm);
-  padding: 0.75rem 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* Outline headline helpers */
+.stroke,
+.fill {
+  letter-spacing: inherit;
+  white-space: normal;
 }
 
-header.navbar .brand {
-  font-family: 'Barlow';
-  font-size: var(--font-size-lg);
-  font-weight: 600;
-  color: var(--color-primary);
-  text-decoration: none;
+@media (max-width: 768px) {
+  .stroke,
+  .fill {
+    letter-spacing: 0;
+  }
+
+  .popular-protips-title,
+  .recent-recs-title,
+  .recent-recs-dashboard-title,
+  .our-features-title,
+  .recent-public-profiles-title,
+  .dashboard-title,
+  .manage-content-title,
+  .quick-actions-title {
+    letter-spacing: -1px;
+  }
+
+  .popular-protips-title .stroke,
+  .recent-recs-title .stroke,
+  .recent-recs-dashboard-title .stroke,
+  .our-features-title .stroke,
+  .recent-public-profiles-title .stroke,
+  .dashboard-title .stroke,
+  .manage-content-title .stroke,
+  .quick-actions-title .stroke {
+    -webkit-text-stroke: 4px currentColor;
+  }
 }
 
-header.navbar nav {
-  display: flex;
-  gap: 1.25rem;
-}
+@media (max-width: 480px) {
+  .stroke,
+  .fill {
+    letter-spacing: 0.2px;
+  }
 
-header.navbar nav a {
-  font-family: 'Barlow';
-  font-size: var(--font-size-base);
-  color: var(--color-text);
-  text-decoration: none !important;
-  padding: 0.25rem 0.5rem;
-  border-radius: var(--radius-sm);
-  transition: background 0.2s;
-}
+  .popular-protips-title,
+  .recent-recs-title,
+  .recent-recs-dashboard-title,
+  .our-features-title,
+  .recent-public-profiles-title,
+  .dashboard-title,
+  .manage-content-title,
+  .quick-actions-title {
+    letter-spacing: 0;
+  }
 
-header.navbar nav a:hover {
-  background: var(--color-primary);
-  color: #fff;
+  .popular-protips-title .stroke,
+  .recent-recs-title .stroke,
+  .recent-recs-dashboard-title .stroke,
+  .our-features-title .stroke,
+  .recent-public-profiles-title .stroke,
+  .dashboard-title .stroke,
+  .manage-content-title .stroke,
+  .quick-actions-title .stroke {
+    -webkit-text-stroke: 3px currentColor;
+  }
 }
 
 /* Home.html */
@@ -137,7 +163,6 @@ header.navbar nav a:hover {
 @media (max-width: 768px) {
   .container {
     max-width: 768px;
-    width: 768px;
     padding: 0;
   }
 }
@@ -170,13 +195,6 @@ body.categories-bg .container {
   background: transparent !important;
 }
 
-body.categories-bg .main-header {
-  background: transparent !important;
-}
-
-body.categories-bg .main-header img {
-  background: transparent !important;
-}
 /* Popular pro tips */
 /* Section Wrapper */
 .popular-pro-tips-section {
@@ -317,15 +335,13 @@ body.categories-bg .main-header img {
   border: 4px solid #0e0b0b;
   box-shadow: 4px 4px 0 rgba(0,0,0,0.6);
   text-decoration: none;
-  height: 382px;
   color: inherit;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   /* remove fixed width */
   width: 100%; 
-  height: 500px;
-  max-width: 307px; /* optional: keeps them from stretching too wide */
+  /* max-width: 307px; */
   margin: 0 auto;   /* centers the cards when smaller */
 }
 
@@ -333,7 +349,7 @@ body.categories-bg .main-header img {
 /* Image */
 .pro-tip-image-wrap {
   width: 100%;
-  height: 378px;
+  height: 200px;
   aspect-ratio: 16 / 10; /* keeps proportion */
   border-radius: 12px;
   overflow: hidden;
@@ -560,7 +576,7 @@ body.categories-bg .main-header img {
 /* Individual Card */
 .rec-card {
   flex: 1 1 300px; /* flexible sizing */
-  max-width: 307px;
+  /* max-width: 307px; */
   min-width: 260px;
   display: flex;
   flex-direction: column;
@@ -579,7 +595,7 @@ body.categories-bg .main-header img {
 /* Image wrapper */
 .rec-image-wrap {
   width: 100%;
-  height: 378px;
+  height: 200px;
   aspect-ratio: 16 / 10; /* keep proportion */
   position: relative;
   border-radius: 20px;
@@ -607,7 +623,7 @@ body.categories-bg .main-header img {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 65%;
+  top: 150px;
   background: #ECBED9;
   border: 2px solid #000000;
   border-radius: 60px;
@@ -985,7 +1001,7 @@ body.categories-bg .main-header img {
 
   /* instead of fixed width & height */
   width: 100%;
-  max-width: 307px;
+  /* max-width: 307px; */
   height: auto;
 
   background: #ECBED9;
@@ -1288,8 +1304,9 @@ body.categories-bg .main-header img {
     padding: 16px 0;
   }
   .recent-public-profiles-grid {
-    max-width: 1318px;
-    grid-template-columns: repeat(3, 1fr);
+    max-width: 100%;
+    grid-template-columns: 1fr;
+    padding:0px 8px
   }    
 }
 
@@ -1305,8 +1322,8 @@ body.categories-bg .main-header img {
   }
 
   .recent-public-profiles-grid {
-    max-width: 307px;
-    grid-template-columns: repeat(1, 1fr);
+    max-width: 100%;
+    grid-template-columns: 1fr;
   }
 }
   /* make cards stack full width */
@@ -1338,160 +1355,6 @@ body.categories-bg .main-header img {
     height: 50px;
   }
 
-/* Main header */
-.main-header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  width: 90%;
-  max-width: 1320px;
-  margin: 20px auto;
-  padding: 0 16px;
-  background: #FDF0F0;
-  border-radius: 0;
-  box-shadow: none;
-  position: relative;
-}
-
-.nav-btn.nav-logout {
-  background: #ECBED9 !important;
-  color: #000 !important;
-}
-
-/* Tablet and mobile responsive header */
-@media (max-width: 1024px) {
-  .main-header {
-    width: 95%;
-    margin: 15px auto;
-    padding: 0 12px;
-  }
-}
-
-@media (max-width: 768px) {
-  .main-header {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 10px 12px;
-    width: 100%;
-    margin: 10px auto;
-  }
-  
-  .main-nav {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-  
-  .nav-btn {
-    min-width: auto;
-    padding: 8px 16px;
-    font-size: 14px;
-    height: 44px;
-  }
-  
-  .nav-btn span {
-    display: none;
-  }
-  
-  .nav-btn img {
-    width: 20px;
-    height: 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .main-header {
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    width: 100%;
-    padding: 15px 10px;
-    margin: 5px auto;
-  }
-  
-  .main-nav {
-    justify-content: center;
-    width: 100%;
-  }
-  
-  .nav-btn {
-    flex: 1;
-    min-width: 60px;
-    max-width: 80px;
-    padding: 10px 8px;
-    justify-content: center;
-  }
-}
-
-/* Logo / Profile Image */
-.main-header img {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  background: #fff;
-  display: block;
-}
-/* Header Navigation */
-.main-nav {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 20px;
-  height: auto;
-  background: transparent;
-}
-.nav-btn {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 10px 30px;
-  gap: 10px;
-  font-family: 'Barlow', sans-serif;
-  font-weight: 800;
-  font-size: 20px;
-  line-height: 24px;
-  border-radius: 110px;
-  border: 4px solid #000000;
-  background: #fff;
-  color: #000;
-  text-decoration: none !important;
-  height: 56px;
-  box-sizing: border-box;
-  transition: background 0.2s;
-  min-width: 150px;
-  justify-content: center;
-}
-.nav-btn.nav-register {
-  background: #DCE45F;
-  box-shadow: 4px 6px 0 #000;
-  border: 4px solid #000;
-  min-width: 202px;
-}
-.logo-badge {
-  font-family: 'Barlow', sans-serif;
-  font-size: 22px;
-  font-weight: 500 !important;
-  color: #000 !important;
-  text-shadow: none !important;
-  letter-spacing: 1px;
-  background: var(--accent-green, #dff16a);
-  border: 3px solid #0e0b0b;
-  border-radius: 12px;
-  padding: 8px 18px 6px 18px;
-  box-shadow: 3px 3px 0 rgba(0,0,0,0.65);
-  display: inline-block;
-  line-height: 1.1;
-}
-/* --- Header + Nav style from Figma --- */
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-}
 /* HERO heading style */
 .hero h1 {
   font-family: 'Barlow', sans-serif; /* ✅ switch to Inter */
@@ -2574,8 +2437,7 @@ select {
   a,
   input[type="button"],
   input[type="submit"],
-  .btn,
-  .nav-btn {
+  .btn {
     min-height: 44px; /* iOS recommended touch target size */
     min-width: 44px;
   }
@@ -4326,10 +4188,6 @@ body.modal-open {
 body.cur8tr-recs-bg {
     background: #ECBED9 !important;
 }
-body.cur8tr-recs-bg header.main-header {
-    background: #ECBED9 !important;
-}
-
 /* ---------------- Frame 8 (container in rec_form.html itself) ---------------- */
 
 /* --- Frame 7: Heading --- */
@@ -6292,42 +6150,6 @@ body.cur8tr-recs-bg header.main-header {
     vertical-align: middle;
     margin: 20px 20px 20px 20px;
 }
-/* Responsive adjustment for main header and main nav */
-/* Responsive adjustments */
-@media (max-width: 1400px) {
-  .main-header {
-    width: 95%;
-    margin: 16px auto;
-    padding: 0 12px;
-  }
-
-  .main-nav {
-    gap: 12px;
-  }
-}
-
-  .main-nav {
-    flex-wrap: wrap;
-    gap: 10px;
-    width: 100%;
-    justify-content: flex-start;
-  }
-}
-
-@media (max-width: 390px) {
-  .main-header img {
-    width: 28px;
-    height: 28px;
-  }
-
-  .main-nav {
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    gap: 8px;
-  }
-}
-
 /* Hero figma responsive update */
 /* Tablet (≤1024px) */
 @media (max-width: 1400px) {
@@ -6424,4 +6246,5 @@ body.cur8tr-recs-bg header.main-header {
     width: 20px;
     height: 20px;
   }
+}
 }

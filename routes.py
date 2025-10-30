@@ -2,6 +2,7 @@ import os
 import random
 import string
 import uuid
+import logging
 from datetime import datetime, timedelta
 from functools import wraps
 from flask import render_template, request, redirect, url_for, flash, session, abort, send_from_directory, make_response, jsonify
@@ -93,37 +94,44 @@ def register_routes(app, db):
     @app.route('/')
     def home():
         """Home page showing recent recommendations and public profiles"""
-        # Get recent public profiles (limit to 3)
-        profiles = Profile.query.filter_by(is_public=True).order_by(Profile.created_at.desc()).limit(3).all()
-        
-        # Get most recent recommendations from public profiles (limit to 8)
-        recent_recommendations = db.session.query(Recommendation).join(Category).join(Profile).filter(
-            Profile.is_public == True
-        ).order_by(Recommendation.created_at.desc()).limit(8).all()
-        
-        # Get Popular Pro Tips (top 3 most upvoted with pro tips from current month)
-        from datetime import datetime, timedelta
-        current_month_start = datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-        popular_pro_tips = db.session.query(Recommendation).join(Category).join(Profile).filter(
-            Profile.is_public == True,
-            Recommendation.pro_tip != None,
-            Recommendation.pro_tip != '',
-            Recommendation.created_at >= current_month_start
-        ).outerjoin(Like).group_by(Recommendation.id).order_by(
-            db.func.count(Like.id).desc(),
-            Recommendation.created_at.desc()
-        ).limit(4).all()
-        
-        # If not enough tips from current month, get from all time
-        if len(popular_pro_tips) < 4:
+        try:
+            # Get recent public profiles (limit to 3)
+            profiles = Profile.query.filter_by(is_public=True).order_by(Profile.created_at.desc()).limit(3).all()
+            
+            # Get most recent recommendations from public profiles (limit to 8)
+            recent_recommendations = db.session.query(Recommendation).join(Category).join(Profile).filter(
+                Profile.is_public == True
+            ).order_by(Recommendation.created_at.desc()).limit(8).all()
+            
+            # Get Popular Pro Tips (top 3 most upvoted with pro tips from current month)
+            from datetime import datetime, timedelta
+            current_month_start = datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
             popular_pro_tips = db.session.query(Recommendation).join(Category).join(Profile).filter(
                 Profile.is_public == True,
                 Recommendation.pro_tip != None,
-                Recommendation.pro_tip != ''
+                Recommendation.pro_tip != '',
+                Recommendation.created_at >= current_month_start
             ).outerjoin(Like).group_by(Recommendation.id).order_by(
                 db.func.count(Like.id).desc(),
                 Recommendation.created_at.desc()
             ).limit(4).all()
+            
+            # If not enough tips from current month, get from all time
+            if len(popular_pro_tips) < 4:
+                popular_pro_tips = db.session.query(Recommendation).join(Category).join(Profile).filter(
+                    Profile.is_public == True,
+                    Recommendation.pro_tip != None,
+                    Recommendation.pro_tip != ''
+                ).outerjoin(Like).group_by(Recommendation.id).order_by(
+                    db.func.count(Like.id).desc(),
+                    Recommendation.created_at.desc()
+                ).limit(4).all()
+        
+        except Exception as e:
+            logging.warning(f"Error loading home page data: {e}. Showing empty home page.")
+            profiles = []
+            recent_recommendations = []
+            popular_pro_tips = []
         
         return render_template('home.html', 
                              profiles=profiles, 
@@ -175,12 +183,21 @@ def register_routes(app, db):
                 'expires_at': (datetime.now() + timedelta(minutes=10)).isoformat()
             }
             
-            # In a real app, send verification email here
-            # For now, we'll show the code on the page  
-            flash_auth('register_success')
-            flash(f'Verification code: {verification_code} (expires in 10 minutes)', 'info')
-            logging.info("Redirecting to verification page")
-            return redirect(url_for('verify_registration'))
+            # Send verification email
+            from utils import send_verification_email
+            email_sent = send_verification_email(form.email.data, verification_code, form.username.data)
+            
+            if email_sent:
+                flash_auth('register_success')
+                flash(f'We\'ve sent a verification code to {form.email.data}. Please check your email and enter the code to complete registration.', 'info')
+                logging.info("Verification email sent, redirecting to verification page")
+                return redirect(url_for('verify_registration'))
+            else:
+                # If email fails, still allow manual verification by showing code (fallback)
+                flash_auth('register_success')
+                flash(f'Email delivery failed. Your verification code is: {verification_code} (expires in 10 minutes)', 'warning')
+                logging.warning("Email sending failed, showing code as fallback")
+                return redirect(url_for('verify_registration'))
         else:
             if request.method == 'POST':
                 logging.error(f"Form validation failed: {form.errors}")
@@ -205,20 +222,51 @@ def register_routes(app, db):
         if request.method == 'POST':
             code = request.form.get('verification_code', '').strip()
             if code == pending_user['verification_code']:
-                # Create the user
-                user = User(
-                    username=pending_user['username'],
-                    email=pending_user['email'],
-                    password_hash=pending_user['password_hash'],
-                    is_verified=True
-                )
-                db.session.add(user)
-                db.session.commit()
+                # Check for duplicate verification attempts
+                if session.get('verification_processing'):
+                    flash('Verification already in progress. Please wait.', 'warning')
+                    return render_template('auth/verify.html', pending_user=pending_user)
                 
-                del session['pending_user']
-                session['user_id'] = user.id
-                flash_auth('verify_success')
-                return redirect(url_for('dashboard'))
+                # Set verification processing flag
+                session['verification_processing'] = True
+                
+                # Check if user already exists (prevent duplicate creation)
+                existing_user = User.query.filter(
+                    (User.username == pending_user['username']) |
+                    (User.email == pending_user['email'])
+                ).first()
+                
+                if existing_user:
+                    # User already exists, clean up session and redirect to login
+                    del session['pending_user']
+                    session.pop('verification_processing', None)
+                    flash('An account with this information already exists. Please log in instead.', 'warning')
+                    return redirect(url_for('login'))
+                
+                try:
+                    # Create the user
+                    user = User(
+                        username=pending_user['username'],
+                        email=pending_user['email'],
+                        password_hash=pending_user['password_hash'],
+                        is_verified=True
+                    )
+                    db.session.add(user)
+                    db.session.commit()
+                    
+                    # Clean up session
+                    del session['pending_user']
+                    session.pop('verification_processing', None)
+                    session['user_id'] = user.id
+                    flash_auth('verify_success')
+                    return redirect(url_for('dashboard'))
+                    
+                except Exception as e:
+                    db.session.rollback()
+                    session.pop('verification_processing', None)
+                    logging.error(f"Error creating user during verification: {e}")
+                    flash('An error occurred during account creation. Please try again.', 'error')
+                    return redirect(url_for('register'))
             else:
                 flash_auth('verify_invalid_code')
         
@@ -537,7 +585,25 @@ def register_routes(app, db):
             return redirect(url_for('dashboard_profile'))
         
         form = CategoryForm()
+        
         if form.validate_on_submit():
+            # Check if category with same name already exists
+            existing_category = Category.query.filter_by(
+                profile_id=profile.id,
+                name=form.name.data
+            ).first()
+            
+            if existing_category:
+                # If it's an AJAX request, return JSON
+                if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                    return jsonify({
+                        'success': False,
+                        'message': f'Category "{form.name.data}" already exists!'
+                    }), 409
+                else:
+                    flash(f'Category "{form.name.data}" already exists!', 'warning')
+                    return render_template('dashboard/category_form.html', form=form, title="New Category")
+            
             slug = slugify(form.name.data)
             # Ensure unique slug within profile
             counter = 1
@@ -554,8 +620,16 @@ def register_routes(app, db):
             )
             db.session.add(category)
             db.session.commit()
-            flash('Category created successfully!', 'success')
-            return redirect(url_for('dashboard_categories'))
+            
+            # If it's an AJAX request, return JSON
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return jsonify({
+                    'success': True,
+                    'message': 'Category created successfully!'
+                }), 201
+            else:
+                flash('Category created successfully!', 'success')
+                return redirect(url_for('dashboard_categories'))
         
         return render_template('dashboard/category_form.html', form=form, title="New Category")
 

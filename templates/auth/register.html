@@ -96,18 +96,53 @@ document.addEventListener('DOMContentLoaded', function() {
 // Auto-focus the verification code input
 document.addEventListener('DOMContentLoaded', function() {
     const input = document.querySelector('input[name="verification_code"]');
+    const form = document.querySelector('form[method="POST"]');
+    const submitBtn = document.querySelector('button[type="submit"]');
+    let isSubmitting = false;
+    
     if (input) {
         input.focus();
         
+        // Prevent double submission
+        const handleSubmit = function(source) {
+            if (isSubmitting) {
+                console.log('Form already submitting, ignoring duplicate submission');
+                return false;
+            }
+            
+            isSubmitting = true;
+            console.log(`Form submission started from: ${source}`);
+            
+            // Update button state
+            if (submitBtn) {
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+                submitBtn.disabled = true;
+            }
+            
+            // Submit the form
+            form.submit();
+            return true;
+        };
+        
         // Auto-submit when 6 digits are entered
         input.addEventListener('input', function() {
-            if (this.value.length === 6) {
+            if (this.value.length === 6 && !isSubmitting) {
                 // Small delay to show the complete code
                 setTimeout(() => {
-                    this.closest('form').submit();
+                    if (!isSubmitting) {
+                        handleSubmit('auto-input');
+                    }
                 }, 500);
             }
         });
+        
+        // Handle manual form submission
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                handleSubmit('manual-click');
+            });
+        }
     }
 });
 </script>

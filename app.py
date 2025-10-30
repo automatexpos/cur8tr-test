@@ -42,10 +42,16 @@ def create_app():
             f"postgresql+psycopg2://postgres:{SUPABASE_PASSWORD}"
             "@db.uhgwgylljeemqbmuhgqn.supabase.co:5432/postgres?sslmode=require"
         )
-        # Local dev can use normal pooling
+        # Local dev can use normal pooling with optimized settings
         app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
             "pool_recycle": 300,
-            "pool_pre_ping": True
+            "pool_pre_ping": True,
+            "pool_size": 5,
+            "max_overflow": 10,
+            "connect_args": {
+                "connect_timeout": 30,
+                "options": "-c statement_timeout=120000"  # 120 second timeout per query
+            }
         }
 
     # File upload configuration
