@@ -1,0 +1,939 @@
+/* CUR8tr - Modern Colorful Design System */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+:root {
+  /* Exact UI Guidelines Color Palette */
+  --ui-pink: #e4a5c7;
+  --ui-green: #a8d5a8;
+  --ui-cream: #f0e68c;
+  --ui-purple: #b8a4d9;
+  
+  /* Only UI Guidelines Colors - No Extended Palette */
+  --soft-pink: #e4a5c7;
+  --soft-purple: #b8a4d9;
+  --soft-green: #a8d5a8;
+  --soft-cream: #f0e68c;  /* Changed to match guidelines cream */
+  --soft-yellow: #f0e68c;
+  --soft-blue: #a8d5a8;  /* Changed blue to green */
+  --soft-lavender: #b8a4d9;  /* Changed to purple */
+  --soft-mint: #a8d5a8;  /* Changed to green */
+  
+  /* Mac OS Classic Icons */
+  --icon-folder: "📁";
+  --icon-document: "📄";
+  --icon-star: "⭐";
+  --icon-user: "👤";
+  --icon-settings: "⚙️";
+  
+  /* Primary colors - Only UI Guidelines Colors */
+  --primary-yellow: #f0e68c;
+  --primary-cyan: #a8d5a8;  /* Changed from cyan to green */
+  --primary-purple: #b8a4d9;
+  --primary-green: #a8d5a8;
+  --primary-orange: #f0e68c;  /* Changed orange to cream */
+  --primary-pink: #e4a5c7;
+  
+  /* UI Guidelines Only Gradients */
+  --gradient-1: linear-gradient(135deg, #e4a5c7 0%, #b8a4d9 100%);
+  --gradient-2: linear-gradient(135deg, #b8a4d9 0%, #a8d5a8 100%);
+  --gradient-3: linear-gradient(135deg, #a8d5a8 0%, #f0e68c 100%);
+  --gradient-4: linear-gradient(135deg, #f0e68c 0%, #e4a5c7 100%);
+  
+  /* Mac OS Window Styling - Only UI Guidelines Colors */
+  --white: #ffffff;
+  --mac-window: #f0e68c;  /* Cream background */
+  --mac-border: #b8a4d9;  /* Purple border */
+  --mac-shadow: rgba(180, 164, 217, 0.25);  /* Purple shadow */
+  --mac-button: #e4a5c7;
+  --mac-button-hover: #b8a4d9;  /* Purple hover */
+  --mac-titlebar: var(--ui-cream);
+  --mac-titlebar-gradient: linear-gradient(180deg, #f0e68c 0%, #e4a5c7 100%);
+  
+  /* Window Controls using UI Guidelines Colors */
+  --window-close: #e4a5c7;    /* Pink */
+  --window-minimize: #f0e68c; /* Cream */
+  --window-zoom: #a8d5a8;     /* Green */
+  
+  /* Gray scale using only UI Guidelines colors */
+  --gray-50: #ffffff;
+  --gray-100: #f0e68c;  /* Light cream */
+  --gray-200: #e4a5c7;  /* Light pink */
+  --gray-300: #b8a4d9;  /* Light purple */
+  --gray-400: #a8d5a8;  /* Light green */
+  --gray-500: #2c2c2e;  /* Keep dark text */
+  --gray-600: #2c2c2e;
+  --gray-700: #2c2c2e;
+  --gray-800: #2c2c2e;
+  --gray-900: #2c2c2e;
+  
+  /* Text colors - Only dark text and white */
+  --text-primary: #2c2c2e;
+  --text-secondary: #2c2c2e;
+  --text-inverse: #ffffff;
+  --text-muted: #2c2c2e;
+  
+  /* Background - UI Guidelines Colors Only */
+  --bg-main: #f0e68c;   /* Cream background */
+  --bg-card: #ffffff;
+  
+  /* Soft Mac OS Shadows and Borders */
+  --shadow-soft: 0 2px 8px var(--mac-shadow);
+  --shadow-window: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --border-soft: 1px solid var(--mac-border);
+  --border-window: 2px solid var(--mac-border);
+  --border-radius-soft: 8px;
+  --border-radius-window: 12px;
+  
+  /* Legacy shadows for compatibility */
+  --shadow-sm: 0 1px 4px var(--mac-shadow);
+  --shadow-md: 0 2px 8px var(--mac-shadow);
+  --shadow-lg: 0 4px 16px var(--mac-shadow);
+  --shadow-xl: 0 8px 24px var(--mac-shadow);
+}
+
+/* Mobile-First Profile Layout */
+@media (max-width: 768px) {
+  .profile-header {
+    padding: 1rem;
+  }
+  
+  .profile-image, .profile-avatar {
+    width: 80px !important;
+    height: 80px !important;
+  }
+  
+  .social-links a {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+  
+  /* Mobile Recommendations Cards */
+  .recommendations-mobile-view .recommendation-card {
+    margin-bottom: 16px;
+  }
+  
+  .window-content {
+    padding: 12px;
+  }
+  
+  .btn {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+}
+
+/* Ensure text doesn't break out on mobile */
+.recommendation-card h4 {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.recommendation-card p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg-main);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--bg-main);
+  min-height: 100vh;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.5rem;
+}
+
+.text-xl { font-size: 1.25rem; }
+.text-2xl { font-size: 1.5rem; }
+.text-3xl { font-size: 1.875rem; }
+.text-4xl { font-size: 2.25rem; }
+.text-5xl { font-size: 3rem; }
+
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.font-extrabold { font-weight: 800; }
+.font-black { font-weight: 900; }
+
+/* Layout */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+@media (min-width: 768px) {
+  .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1024px) {
+  .lg\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lg\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* Header */
+.header {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(8px);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 900;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-decoration: none;
+}
+
+/* Navigation */
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+  background: var(--gray-100);
+  color: var(--text-primary);
+}
+
+.nav-link.primary {
+  background: var(--primary-purple);
+  color: var(--text-inverse);
+}
+
+.nav-link.primary:hover {
+  background: var(--primary-pink);
+  color: var(--text-inverse);
+}
+
+/* Mac OS Window Styling - Exact UI Guidelines Match */
+.card {
+  background: var(--mac-window);
+  border: 2px solid var(--mac-border);
+  border-radius: var(--border-radius-window);
+  padding: 0;
+  box-shadow: var(--shadow-window);
+  position: relative;
+  color: var(--text-primary);
+  transition: all 0.2s ease;
+  overflow: visible;
+}
+
+/* Mac OS Title Bar with Window Controls */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  background: var(--mac-titlebar-gradient);
+  border-bottom: 1px solid var(--mac-border);
+  z-index: 1;
+}
+
+/* Window Control Dots (Red, Yellow, Green) - Classic Mac OS */
+.card::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 8px;
+  width: 12px;
+  height: 12px;
+  background: var(--window-close);
+  border-radius: 50%;
+  z-index: 2;
+  box-shadow: 
+    16px 0 0 0 var(--window-minimize),
+    32px 0 0 0 var(--window-zoom);
+}
+
+/* Card Content Area */
+.card-body {
+  padding: 1.5rem;
+  margin-top: 28px;
+  position: relative;
+  z-index: 0;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-window);
+  transform: translateY(-2px);
+}
+
+/* Gradient Card Variants - UI Guidelines Colors */
+.card.gradient-1 {
+  background: var(--ui-pink);
+  color: var(--text-primary);
+  border: 2px solid #d694bc;
+}
+
+.card.gradient-2 {
+  background: var(--ui-green);
+  color: var(--text-primary);
+  border: 2px solid #98c598;
+}
+
+.card.gradient-3 {
+  background: var(--ui-cream);
+  color: var(--text-primary);
+  border: 2px solid #e6d666;
+}
+
+.card.gradient-4 {
+  background: var(--ui-purple);
+  color: var(--text-primary);
+  border: 2px solid #a694c9;
+}
+
+/* Special Window Styles for Different Content Types */
+.window-manage {
+  background: var(--ui-pink);
+  border: 2px solid #d694bc;
+}
+
+.window-content {
+  background: var(--ui-green);
+  border: 2px solid #98c598;
+}
+
+.window-info {
+  background: var(--ui-cream);
+  border: 2px solid #e6d666;
+}
+
+.window-user {
+  background: var(--ui-purple);
+  border: 2px solid #a694c9;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  font-size: 1.125rem;
+  padding: 16px 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+  overflow: visible;
+}
+
+.card-content {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Buttons - Classic Mac OS Style from UI Guidelines */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-family: inherit;
+  text-decoration: none;
+  border: 2px solid var(--mac-border);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.15s ease;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 2px 4px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%), var(--ui-pink);
+  color: var(--text-primary);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.btn:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 100%), var(--ui-pink);
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 3px 6px rgba(0, 0, 0, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn:active {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.7) 100%), var(--ui-pink);
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.2);
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%), var(--ui-pink);
+  border-color: #d694bc;
+}
+
+.btn-secondary {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%), var(--ui-green);
+  border-color: #98c598;
+}
+
+.btn-warning {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%), var(--ui-cream);
+  border-color: #e6d666;
+}
+
+.btn-info {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%), var(--ui-purple);
+  border-color: #a694c9;
+}
+
+.btn-secondary {
+  background: var(--gray-100);
+  color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--gray-200);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-primary);
+  border: 2px solid var(--gray-200);
+}
+
+.btn-outline:hover {
+  background: var(--gray-50);
+  border-color: var(--gray-300);
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+}
+
+.btn-lg {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+}
+
+/* Mac OS Forms - Matching UI Guidelines */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  font-size: 13px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px 12px;
+  border: 2px solid var(--mac-border);
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.06),
+    0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--ui-purple);
+  box-shadow: 
+    inset 0 2px 4px rgba(0, 0, 0, 0.06),
+    0 1px 0 rgba(255, 255, 255, 0.8),
+    0 0 0 3px rgba(184, 164, 217, 0.3);
+  background: rgba(255, 255, 255, 1);
+}
+
+.form-control::placeholder {
+  color: var(--gray-400);
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.checkbox input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 0.25rem;
+  border: 2px solid var(--gray-300);
+  accent-color: var(--primary-purple);
+}
+
+/* Profile styles */
+.profile-header {
+  background: var(--gradient-1);
+  border-radius: 1.5rem;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+}
+
+.profile-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 1.5rem;
+  object-fit: cover;
+  border: 4px solid var(--white);
+  box-shadow: var(--shadow-lg);
+}
+
+.profile-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 1.5rem;
+  background: var(--primary-cyan);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  border: 4px solid var(--white);
+  box-shadow: var(--shadow-lg);
+}
+
+.social-links {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+
+.social-link:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Recommendation items */
+.recommendation-item {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.recommendation-title {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.recommendation-description {
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+  opacity: 0.9;
+}
+
+.recommendation-url a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 0.5rem;
+  text-decoration: none;
+  color: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.recommendation-url a:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Flash messages - UI Guidelines Colors Only */
+.flash-messages {
+  margin: 1rem 0;
+}
+
+.flash-message {
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 500;
+}
+
+.flash-success {
+  background: var(--ui-green);
+  color: var(--text-primary);
+}
+
+.flash-error {
+  background: var(--ui-pink);
+  color: var(--text-primary);
+}
+
+.flash-warning {
+  background: var(--ui-cream);
+  color: var(--text-primary);
+}
+
+.flash-info {
+  background: var(--ui-purple);
+  color: var(--text-primary);
+}
+
+/* Utility classes */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+
+.mb-0 { margin-bottom: 0; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+
+.mt-0 { margin-top: 0; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-4 { margin-top: 1rem; }
+.mt-6 { margin-top: 1.5rem; }
+.mt-8 { margin-top: 2rem; }
+
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+.p-8 { padding: 2rem; }
+
+.rounded { border-radius: 0.5rem; }
+.rounded-lg { border-radius: 0.75rem; }
+.rounded-xl { border-radius: 1rem; }
+.rounded-2xl { border-radius: 1.5rem; }
+
+.shadow { box-shadow: var(--shadow-md); }
+.shadow-lg { box-shadow: var(--shadow-lg); }
+.shadow-xl { box-shadow: var(--shadow-xl); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 0.75rem;
+  }
+  
+  .header-content {
+    padding: 0.75rem;
+  }
+  
+  .card {
+    padding: 1rem;
+  }
+  
+  .profile-header {
+    padding: 1.5rem;
+  }
+  
+  .profile-image,
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .social-links {
+    flex-wrap: wrap;
+  }
+}
+
+/* Elegant Message System - CUR8tr Style */
+.message-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  max-width: 400px;
+  width: 100%;
+}
+
+.flash-message {
+  margin-bottom: 12px;
+  padding: 16px 20px;
+  border-radius: var(--border-radius-soft);
+  box-shadow: var(--shadow-soft);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+  animation: slideInRight 0.3s ease-out;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+.flash-message::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: currentColor;
+  opacity: 0.3;
+}
+
+.flash-message .message-icon {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  vertical-align: top;
+  margin-top: -1px;
+}
+
+.flash-message .message-text {
+  display: inline-block;
+  vertical-align: top;
+  max-width: calc(100% - 60px);
+}
+
+.flash-message .message-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flash-message .message-close:hover {
+  opacity: 0.8;
+}
+
+/* Message Types with Mac OS Aesthetic */
+.flash-success {
+  background: rgba(168, 213, 168, 0.95);
+  color: #2d5016;
+  border: 1px solid rgba(168, 213, 168, 0.3);
+}
+
+.flash-error {
+  background: rgba(228, 165, 199, 0.95);
+  color: #8b2635;
+  border: 1px solid rgba(228, 165, 199, 0.3);
+}
+
+.flash-warning {
+  background: rgba(240, 230, 140, 0.95);
+  color: #8b6914;
+  border: 1px solid rgba(240, 230, 140, 0.3);
+}
+
+.flash-info {
+  background: rgba(173, 216, 230, 0.95);
+  color: #1e4a5f;
+  border: 1px solid rgba(173, 216, 230, 0.3);
+}
+
+/* Inline Flash Messages (for forms) */
+.flash-inline {
+  position: static;
+  margin: 12px 0;
+  animation: fadeIn 0.3s ease-out;
+  backdrop-filter: none;
+  box-shadow: none;
+  padding: 12px 16px;
+}
+
+.flash-inline .message-close {
+  display: none;
+}
+
+/* Animations */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOutRight {
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* Mobile Responsive Messages */
+@media (max-width: 768px) {
+  .message-container {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+  
+  .flash-message {
+    padding: 14px 16px;
+    font-size: 13px;
+  }
+  
+  .flash-message .message-text {
+    max-width: calc(100% - 50px);
+  }
+}
+
+/* Error Form Field Highlighting */
+.form-field-error {
+  border-color: #e4a5c7 !important;
+  background: rgba(228, 165, 199, 0.1);
+  box-shadow: 0 0 0 2px rgba(228, 165, 199, 0.2);
+}
+
+.form-field-error:focus {
+  border-color: #d694bc !important;
+  box-shadow: 0 0 0 2px rgba(228, 165, 199, 0.3);
+}
+
+/* Utility classes */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mb-0 { margin-bottom: 0 !important; }
+.mb-1 { margin-bottom: 8px !important; }
+.mb-2 { margin-bottom: 16px !important; }
+.mb-3 { margin-bottom: 24px !important; }
+
+.d-none { display: none !important; }
+.d-block { display: block !important; }
+.d-inline { display: inline !important; }
+.d-inline-block { display: inline-block !important; }
+
+/* Welcome message animations */
+@keyframes subtle-glow {
+    0% { box-shadow: 0 3px 12px rgba(255, 215, 0, 0.4); }
+    100% { box-shadow: 0 3px 12px rgba(255, 215, 0, 0.6), 0 0 20px rgba(255, 215, 0, 0.2); }
+}
+
+@keyframes fade-in-up {
+    0% { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.welcome-message-card {
+    animation: fade-in-up 0.6s ease-out;
+}
+
+/* Quality indicators animation */
+.quality-indicator {
+    animation: fade-in-up 0.8s ease-out;
+    transition: transform 0.2s ease;
+}
+
+.quality-indicator:hover {
+    transform: scale(1.05);
+}
