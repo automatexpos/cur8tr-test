@@ -65,7 +65,9 @@
       </div>
       <div class="rec-card-bottom">
         <div class="rec-info">
-          <div class="rec-title">{{ rec.title }}</div>
+        <div class="rec-title">
+          {{ rec.title[:15] }}{% if rec.title|length > 15 %}...{% endif %}
+        </div>
           <div class="rec-meta">
             <img src="{{ url_for('static', filename='svg/' ~ category_svg_map.get(rec.category.name, 'default.svg')) }}" width="22" height="22" alt="{{ rec.category.name }}">
             <span>{{ rec.category.name }}</span>
@@ -100,7 +102,9 @@
         <div class="pro-tip-image-wrap">
           <img src="{{ tip.image | safe_image(tip.title, 400, 225) }}" alt="{{ tip.title }}">
         </div>
-        <h4 class="pro-tip-title">{{ tip.title }}</h4>
+        <h4 class="pro-tip-title">
+          {{ tip.title[:15] }}{% if tip.title|length > 15 %}...{% endif %}
+        </h4>
         <div class="pro-tip-meta-row">
           <span class="pro-tip-meta-icon">
             {% if tip.category.name == "Apps" %}
@@ -131,7 +135,7 @@
         <div class="pro-tip-desc-row">
           <img src="{{ url_for('static', filename='svg/bulb.svg') }}" alt="Tip" class="pro-tip-desc-bulb">
           <span class="pro-tip-desc-text">
-            {{ tip.pro_tip[:120] }}{% if tip.pro_tip|length > 120 %}...{% endif %}
+            {{ tip.pro_tip[:40] }}{% if tip.pro_tip|length > 40 %}...{% endif %}
           </span>
         </div>
       </a>

@@ -607,7 +607,7 @@ body.categories-bg .main-header img {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
-  top: 65%;
+  bottom: 12px;
   background: #ECBED9;
   border: 2px solid #000000;
   border-radius: 60px;
